@@ -96,7 +96,7 @@ def tan(x):
     
 def sqrt(x):
     try:
-        return AutoDiff(np.sqrt(x.val), x.der/(1/2*(np.sqrt(x.val))))
+        return AutoDiff(np.sqrt(x.val), (1/2)*x.der/(np.sqrt(x.val)))
     except AttributeError:
         return np.sqrt(x)
 
