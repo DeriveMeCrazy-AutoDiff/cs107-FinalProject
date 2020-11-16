@@ -99,4 +99,10 @@ def tan(x):
         return AutoDiff(np.tan(x.val), x.der*(1/np.cos(x.val)**2))
     except AttributeError:
         return np.tan(x)
+    
+def sqrt(x):
+    try:
+        return AutoDiff(np.sqrt(x.val), x.der/(1/2*(np.sqrt(x.val))))
+    except AttributeError:
+        return np.log(x)
 
