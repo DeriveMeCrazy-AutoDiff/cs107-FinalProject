@@ -104,5 +104,5 @@ def sqrt(x):
     try:
         return AutoDiff(np.sqrt(x.val), x.der/(1/2*(np.sqrt(x.val))))
     except AttributeError:
-        return np.log(x)
+        return np.sqrt(x)
 
