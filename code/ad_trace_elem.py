@@ -1,23 +1,26 @@
+import operand
+#import ad_trace
+
 class ad_trace_elem:
 
-    def __init__(parent_ad_trace, operation, op_list):
+    def __init__(self, parent_ad_trace, operation, op_list):
         self.parent_ad_trace = parent_ad_trace
         self.derivs = [] #value of our current node partial derivatives that are calculated 
         self.operation = operation # operation to be used for updating the trace (as a string, e.g 'sin')
         #we can have one or two depending on the type
         self.operands = op_list 
+        self.val_func = 0
         self.curr_operand = operand(1)
         self.curr_operand.set_value = "x" + self.parent_ad_trace.elements_dict.size()
         self.nodes = []
-        nodes = []
         for op in op_list:
             if op.op_type == 1: 
                 self.nodes.append(self.parent_ad_trace.elements_dict[op.get_op_string])
             else: 
                 self.nodes.append(op.get_value)
-        evaluate()
+        self.evaluate()
         
-    def get_val_deriv():
+    def get_val_deriv(self):
         return (self.value, self.derivs)
     
     def __str__():
@@ -25,22 +28,22 @@ class ad_trace_elem:
         element_string = ""
         return element_string
 
-    def evaluate():
+    def evaluate(self):
         #uses previous node's values and the overloaded operation function 
         #To obtain and calculate the value of the current node 
         #We will have a sort of Switch statement here for operation selection 
         res = None
         if self.operation == None: #this is an input only node, single operand in op_list
-            self.val_func = self.parent_ad_trace.input_vars[0]
-            self.derivs.append(1)
+            self.val_func = self.parent_ad_trace.input_vals[0]
+            self.derivs[0] = 1
         elif self.operation == 'add':
-            res = nodes[0] + nodes[1]
+            res = self.nodes[0] + self.nodes[1]
         elif self.operation == 'mul':
-            res = nodes[0] * nodes[1]
+            res = self.nodes[0] * self.nodes[1]
         elif self.operation == 'sub':
-            res = nodes[0] - nodes[1]
+            res = self.nodes[0] - self.nodes[1]
         elif self.operation == 'div':
-            res = nodes[0] / nodes[1]
+            res = self.nodes[0] / self.nodes[1]
         elif self.operation == 'pow':
             #res = nodes[0] ** nodes[1] 
             pass
@@ -117,7 +120,6 @@ class ad_trace_elem:
     
     def __rmul__(self, other):
         return self.__mul__(other)
-        return res
     
     def __div__(self, other): #self/other
         res = None
