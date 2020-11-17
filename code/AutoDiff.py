@@ -63,12 +63,17 @@ class AutoDiff():
         except AttributeError:
             return AutoDiff(other**self.val, np.log(np.abs(other))*(other**self.val)*self.der)
 
-
 def log(x):
     try:
-        return AutoDiff(np.log(x.val), x.der*(1/x.val))
+        if x.val < 0:
+            raise ValueError('Log is not defined for negative values')
+        else:
+            return AutoDiff(np.log(x.val), x.der*(1/x.val))
     except AttributeError:
-        return np.log(x)
+        if x < 0:
+            raise ValueError('Log is not defined for negative values')
+        else: 
+            return np.log(x)
 
 def exp(x):
     try:
@@ -96,7 +101,12 @@ def tan(x):
     
 def sqrt(x):
     try:
-        return AutoDiff(np.sqrt(x.val), (1/2)*x.der/(np.sqrt(x.val)))
+        if x.val < 0:
+            raise ValueError('Sqrt is not defined for negative values')
+        else:
+            return AutoDiff(np.sqrt(x.val), (1/2)*x.der/(np.sqrt(x.val)))
     except AttributeError:
-        return np.sqrt(x)
-
+        if x < 0:
+            raise ValueError('Sqrt is not defined for negative values')
+        else: 
+            return np.sqrt(x)      
