@@ -37,7 +37,7 @@ class AutoDiff():
         try:
             return AutoDiff(other.val-self.val, other.der-self.der)
         except AttributeError:
-            return AutoDiff(other-self.val, self.der)
+            return AutoDiff(other-self.val, -self.der)
     
     def __truediv__(self, other): 
         try:
