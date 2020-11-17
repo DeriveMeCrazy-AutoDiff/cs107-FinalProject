@@ -31,7 +31,7 @@ class AutoDiff():
         try:
             return AutoDiff(self.val-other.val, self.der-other.der)
         except AttributeError:
-            return AutoDiff(self.val-other, -self.der)
+            return AutoDiff(self.val-other, self.der)
     
     def __rsub__(self, other): 
         try:
