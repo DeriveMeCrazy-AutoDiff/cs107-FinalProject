@@ -8,3 +8,13 @@ John Alling \
 Moriya Dechtiar \
 Al-Muataz Khalil \
 Tianen Liu
+
+## Installing the Dependencies
+If installing within a conda environment:
+```
+conda install --file requirements.txt
+```
+Otherwise:
+```
+pip install -r requirements.txt
+```
