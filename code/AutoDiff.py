@@ -49,7 +49,7 @@ class AutoDiff():
         try:
             return AutoDiff(other.val/self.val, (self.val*other.der- self.der*other.val)/(self.val**2))
         except AttributeError:
-            return AutoDiff(other/self.val, other/self.der)
+            return AutoDiff(other/self.val, -self.der*other/(self.val**2))
     
     def __pow__(self, other):
         try:
