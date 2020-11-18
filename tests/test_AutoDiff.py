@@ -1,6 +1,12 @@
 import pytest
 
-from AutoDiff import *
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
+#import auto_diff_pkg.AutoDiff as AutoDiff
+from  auto_diff_pkg.AutoDiff import AutoDiff, sqrt, sin, cos, exp, log, tan
 
 def test_init_int_zero():    
     x0 = AutoDiff(0)
@@ -53,12 +59,12 @@ def test_rsub():
 def test_sub_AutoDiff():    
     x0 = AutoDiff(5)
     curr_func = (x0+6.3) - x0
-    assert curr_func.val == 6.3 and curr_func.der == 0
+    assert curr_func.val == 6.300000000000001 and curr_func.der == 0
 
 def test_rsub_AutoDiff():    
     x0 = AutoDiff(5)
     curr_func = x0 - (x0+6.3)  
-    assert curr_func.val == -6.3 and curr_func.der == 0
+    assert curr_func.val == -6.300000000000001 and curr_func.der == 0
 
 def test_mul_1():    
     x0 = AutoDiff(1)
@@ -99,7 +105,7 @@ def test_rdiv():
 def test_div_AutoDiff():    
     x0 = AutoDiff(5)
     curr_func = (x0+6.3) / x0
-    assert curr_func.val == 2.26 and curr_func.der == -0.252
+    assert curr_func.val == 2.2600000000000002 and curr_func.der == -0.252
 
 def test_pow_0():    
     x0 = AutoDiff(2)
@@ -124,15 +130,14 @@ def test_pow_frac():
 def test_rpow():    
     x0 = AutoDiff(2)
     curr_func = 6 ** x0
-    assert curr_func.val == 36.0 and curr_func.der == -64.5033408922
+    assert curr_func.val == 36 and curr_func.der == 64.50334089220998
     
 def test_pow_AutoDiff():    
     x0 = AutoDiff(3)
     curr_func = (x0 ** 2) ** x0
-    assert curr_func.val == 729 and curr_func.der == 3059.77671688
+    assert curr_func.val == 729 and curr_func.der == 3059.776716878104
 
 def test_log():    
-    x0 = AutoDiff(2)
     curr_func = log(2)
     assert curr_func == 0.6931471805599453
 
@@ -218,9 +223,3 @@ def test_sqrt_AutoDiff():
     x0 = AutoDiff(2)
     curr_func = sqrt(x0 + 6)
     assert curr_func.val == 2.8284271247461903 and curr_func.der == 0.17677669529663687
-
-
-    #print(curr_func.val, curr_func.der)
-
-#test_sub_AutoDiff()
-#Values to test: int, zero, negative, float, 
