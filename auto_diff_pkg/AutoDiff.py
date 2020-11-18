@@ -62,6 +62,9 @@ class AutoDiff():
             return AutoDiff(other.val**self.val, self.val*(other.val**(self.val-1))*other.der+np.log(np.abs(other.val))*(other.val**self.val)*self.der)
         except AttributeError:
             return AutoDiff(other**self.val, np.log(np.abs(other))*(other**self.val)*self.der)
+    
+    def __str__(self):
+        return 'value: {}, derivative: {}'.format(self.val,self.der)
 
 def log(x):
     try:

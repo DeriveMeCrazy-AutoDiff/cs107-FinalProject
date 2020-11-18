@@ -17,3 +17,14 @@ Otherwise:
 ```
 pip install -r requirements.txt
 ```
+## Usage
+First, add the package to your python path (will not be necessary in future project iterations)
+```
+import os
+os.path.insert(0,'/path/to/cs107-FinalProject/auto_diff_pkg/')
+```
+The package can then be imported and utilized.
+```
+import AutoDiff as AD
+```
+Please see `docs/demo.ipynb` for demonstrations of the AutoDiff class.
