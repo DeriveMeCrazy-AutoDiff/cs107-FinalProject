@@ -8,6 +8,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 #import auto_diff_pkg.AutoDiff as AutoDiff
 from  auto_diff_pkg.AutoDiff import AutoDiff, sqrt, sin, cos, exp, log, tan
 
+epsilon = 10**(-12)
+
 def test_init_int_zero():    
     x0 = AutoDiff(0)
     assert x0.val == 0 and x0.der == 1
@@ -59,12 +61,12 @@ def test_rsub():
 def test_sub_AutoDiff():    
     x0 = AutoDiff(5)
     curr_func = (x0+6.3) - x0
-    assert curr_func.val == 6.300000000000001 and curr_func.der == 0
+    assert abs(curr_func.val - 6.3) < epsilon and curr_func.der == 0
 
 def test_rsub_AutoDiff():    
     x0 = AutoDiff(5)
     curr_func = x0 - (x0+6.3)  
-    assert curr_func.val == -6.300000000000001 and curr_func.der == 0
+    assert abs(curr_func.val - -6.3) < epsilon and curr_func.der == 0
 
 def test_mul_1():    
     x0 = AutoDiff(1)
@@ -105,7 +107,7 @@ def test_rdiv():
 def test_div_AutoDiff():    
     x0 = AutoDiff(5)
     curr_func = (x0+6.3) / x0
-    assert curr_func.val == 2.2600000000000002 and curr_func.der == -0.252
+    assert abs(curr_func.val - 2.2600000000000002) < epsilon and curr_func.der == -0.252
 
 def test_pow_0():    
     x0 = AutoDiff(2)
@@ -187,7 +189,7 @@ def test_cos_frac():
 
 def test_cos_int():    
     curr_func = cos(5)
-    assert curr_func == 0.2836621854632263
+    assert abs(curr_func - 0.2836621854632263) < epsilon
        
 def test_cos_AutoDiff():    
     x0 = AutoDiff(2)
@@ -196,11 +198,11 @@ def test_cos_AutoDiff():
 
 def test_tan_frac():    
     curr_func = tan(0.5)
-    assert curr_func == 0.5463024898437905
+    assert abs(curr_func - 0.5463024898437905) < epsilon
 
 def test_tan_int():    
     curr_func = tan(-5)
-    assert curr_func == 3.380515006246585
+    assert abs(curr_func - 3.380515006246585) < epsilon
        
 def test_tan_AutoDiff():    
     x0 = AutoDiff(2)

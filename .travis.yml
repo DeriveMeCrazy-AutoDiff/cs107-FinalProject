@@ -16,6 +16,6 @@ before_install:
 install: true
 
 script:
-    - pytest --cov=code/*
+    - pytest --cov=auto_diff_pkg
 after_success:
     - codecov
