@@ -16,6 +16,6 @@ before_install:
 install: true
 
 script:
-    - pytest --cov=./
+    - pytest --cov=code/*
 after_success:
     - codecov
