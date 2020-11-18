@@ -6,8 +6,6 @@ notifications:
         on_success: always
         on_failure: always
 
-sudo: false
-
 before_install:
     - pip install numpy
     - pip install pytest pytest-cov
