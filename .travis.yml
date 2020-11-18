@@ -19,3 +19,4 @@ script:
     - pytest --cov=auto_diff_pkg
 after_success:
     - codecov
+    - bash <(curl -s https://codecov.io/bash)
