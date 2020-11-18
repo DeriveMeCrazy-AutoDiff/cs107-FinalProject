@@ -10,8 +10,12 @@ sudo: false
 
 before_install:
     - pip install numpy
+    - pip install pytest pytest-cov
+    - pip install codecov
 
 install: true
 
 script:
-    - python main.py
+    - pytest --cov=auto_diff_pkg
+after_success:
+    - codecov
