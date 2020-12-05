@@ -2,9 +2,13 @@ import numpy as np
 
 class AutoDiff():
 
-    def __init__(self, value, deriv=1.0):
+    def __init__(self, value, deriv=1.0, variables = 1, position = 0):
         self.val = value
-        self.der = deriv
+        self.der = np.array(deriv)
+        
+        if variables >1:
+            self.der = np.zeros(variables)
+            self.der[position] = 1
 
     def __neg__(self):
         return AutoDiff(-self.val, -self.der)
@@ -112,4 +116,49 @@ def sqrt(x):
         if x < 0:
             raise ValueError('Sqrt is not defined for negative values')
         else: 
-            return np.sqrt(x)      
+            return np.sqrt(x)
+        
+def jacobian (variables, functions):
+    jacobian_array = np.empty((len(functions), len(variables)))  
+                                 
+    autodiff_list = []
+    for idx_val, val in enumerate(variables):
+        autodiff_list.append(AutoDiff(val,0))
+    for idx_diff, val  in enumerate(variables):
+        autodiff_list[idx_diff] = AutoDiff(val,1)
+        for idx_f, function  in enumerate(functions):
+            jacobian_array[idx_f,idx_diff] = function(*autodiff_list).der
+        autodiff_list[idx_diff] = AutoDiff(val,0)
+    return jacobian_array
+
+
+values = [1,2,4] 
+def f1(x0, x1, x2):
+    return (x0 + x1 + x2)
+def f2(x0, x1, x2):
+    return (1*x0 + 2*x1 + 3*x2)
+def f3(x0, x1, x2):
+    return (1*x0*2*x1*3*x2)
+def f4(x0, x1, x2):
+    return (x0**2 + x1**3 + x2**4)
+functions = [f1, f2, f3,f4]
+print(jacobian(values, functions), "\n")
+
+x0=AutoDiff(1,1,3,0)
+x1=AutoDiff(2,1,3,1)
+x2=AutoDiff(4,1,3,2)
+
+f1 = x0 + x1 + x2
+f2 = 1*x0 + 2*x1 + 3*x2
+f3 = 1*x0*2*x1*3*x2
+
+f4 = x0**2 + x1**3 + x2**4
+print(f4.der, "\n")
+F=[f1, f2, f3, f4]
+print(F[0].der)
+print(F[1].der)
+print(F[2].der)
+print(F[3].der)
+
+
+
