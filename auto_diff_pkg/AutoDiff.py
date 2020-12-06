@@ -189,6 +189,8 @@ def jacobian (variables, functions):
     return jacobian_array
 
 
+
+## Demos
 values = [1,2,4] 
 def f1(x0, x1, x2):
     return (x0 + x1 + x2)
