@@ -129,6 +129,24 @@ def exp(x):
         return AutoDiff(np.exp(x.val), x.der*np.exp(x.val))
     except AttributeError:
         return np.exp(x)
+
+def sinh(x):
+    try:
+        return AutoDiff(np.sinh(x.val), x.der*np.cosh(x.val))
+    except AttributeError:
+        return np.sinh(x)
+
+def cosh(x):
+    try:
+        return AutoDiff(np.cosh(x.val), x.der*(np.sinh(x.val)))
+    except AttributeError:
+        return np.cosh(x)
+
+def tanh(x):
+    try:
+        return AutoDiff(np.tanh(x.val), x.der*(1-np.tanh(x.val)**2))
+    except AttributeError:
+        return np.tanh(x)
     
 def logistic(x):
     return 1/(1+exp(-x))
@@ -144,7 +162,6 @@ def log(x,base = np.exp):
             raise ValueError('Log is not defined for negative values')
         else: 
             return np.log(x)/np.log(base)
-   
     
 def sqrt(x):
     try:
