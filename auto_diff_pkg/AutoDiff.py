@@ -105,12 +105,33 @@ def tan(x):
         return AutoDiff(np.tan(x.val), x.der*(1/np.cos(x.val)**2))
     except AttributeError:
         return np.tan(x)
+    
+def arcsin(x):
+    try:
+        return AutoDiff(np.arcsin(x.val), x.der/(np.sqrt(1-x.val**2))
+    except AttributeError:
+        return np.arcsin(x)
+
+def arccos(x):
+    try:
+        return AutoDiff(np.arccos(x.val), -x.der/(np.sqrt(1-x.val**2))
+    except AttributeError:
+        return np.arccos(x)
+    
+def arctan(x):
+    try:
+        return AutoDiff(np.arctan(x.val), x.der/((1+x.val**2))
+    except AttributeError:
+        return np.arctan(x)
 
 def exp(x):
     try:
         return AutoDiff(np.exp(x.val), x.der*np.exp(x.val))
     except AttributeError:
         return np.exp(x)
+    
+def logistic(x):
+    return 1/(1+exp(-x))
     
 def log(x,base = np.exp):
     try:
