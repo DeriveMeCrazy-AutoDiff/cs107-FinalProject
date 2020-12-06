@@ -1,10 +1,13 @@
 import numpy as np
+import time
 
 class AutoDiff():
 
     def __init__(self, value, deriv=1.0, variables = 1, position = 0):
         self.val = value
         self.der = np.array(deriv)
+        self.children = []
+        self.grad_value = None
         
         if variables >1:
             self.der = np.zeros(variables)
@@ -24,7 +27,10 @@ class AutoDiff():
           
     def __mul__(self, other):
         try:
-            return AutoDiff(self.val*other.val, self.der*other.val + self.val*other.der)
+            z = AutoDiff(self.val*other.val, self.der*other.val + self.val*other.der)
+            self.children.append((other.val, z))
+            other.children.append((self.val, z))
+            return z
         except AttributeError:
             return AutoDiff(self.val*other, self.der*other)
 
@@ -69,6 +75,13 @@ class AutoDiff():
     
     def __str__(self):
         return 'value: {}, derivative: {}'.format(self.val,self.der)
+    
+    def reverse_mode(self):
+        # recurse only if the value is not yet cached
+        if self.grad_value is None:
+            # calculate derivative using chain rule
+            self.grad_value = sum(weight * var.reverse_mode()for weight, var in self.children)
+        return self.grad_value
 
 def log(x):
     try:
@@ -151,14 +164,36 @@ x2=AutoDiff(4,1,3,2)
 f1 = x0 + x1 + x2
 f2 = 1*x0 + 2*x1 + 3*x2
 f3 = 1*x0*2*x1*3*x2
-
 f4 = x0**2 + x1**3 + x2**4
 print(f4.der, "\n")
+
 F=[f1, f2, f3, f4]
 print(F[0].der)
 print(F[1].der)
 print(F[2].der)
 print(F[3].der)
+
+
+tic = time.perf_counter()
+x = AutoDiff(4)
+y = AutoDiff(.5)
+
+a = x * y
+a.grad_value = 1
+print(x.reverse_mode(), y.reverse_mode())
+toc = time.perf_counter()
+print(f"Reverse Mode {toc - tic} seconds")
+
+
+tic = time.perf_counter()
+x = AutoDiff(4,1,2,0)
+y = AutoDiff(.5,1,2,1)
+
+a = x * y
+
+print(a.der)
+toc = time.perf_counter()
+print(f"Forward Mode {toc - tic} seconds")
 
 
 
