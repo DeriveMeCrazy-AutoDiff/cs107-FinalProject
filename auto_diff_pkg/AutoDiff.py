@@ -108,19 +108,19 @@ def tan(x):
     
 def arcsin(x):
     try:
-        return AutoDiff(np.arcsin(x.val), x.der/(np.sqrt(1-x.val**2))
+        return AutoDiff(np.arcsin(x.val), x.der/(np.sqrt(1-x.val**2)))
     except AttributeError:
         return np.arcsin(x)
 
 def arccos(x):
     try:
-        return AutoDiff(np.arccos(x.val), -x.der/(np.sqrt(1-x.val**2))
+        return AutoDiff(np.arccos(x.val), -x.der/(np.sqrt(1-x.val**2)))
     except AttributeError:
         return np.arccos(x)
     
 def arctan(x):
     try:
-        return AutoDiff(np.arctan(x.val), x.der/((1+x.val**2))
+        return AutoDiff(np.arctan(x.val), x.der/((1+x.val**2)))
     except AttributeError:
         return np.arctan(x)
 
@@ -191,6 +191,7 @@ def jacobian (variables, functions):
 
 
 ## Demos
+#function takes multiple functions and assigns parameters from list. outputs jacobian
 values = [1,2,4] 
 def f1(x0, x1, x2):
     return (x0 + x1 + x2)
@@ -203,6 +204,7 @@ def f4(x0, x1, x2):
 functions = [f1, f2, f3,f4]
 print(jacobian(values, functions), "\n")
 
+#Equation takes multiple values from autodiff, f.der returns gradient
 x0=AutoDiff(1,1,3,0)
 x1=AutoDiff(2,1,3,1)
 x2=AutoDiff(4,1,3,2)
@@ -219,7 +221,7 @@ print(F[1].der)
 print(F[2].der)
 print(F[3].der)
 
-
+#Comparing Reverse mode and forward mode
 tic = time.perf_counter()
 x = AutoDiff(4)
 y = AutoDiff(.5)
@@ -241,6 +243,7 @@ print(a.der)
 toc = time.perf_counter()
 print(f"Forward Mode {toc - tic} seconds")
 
+#autodiff takes vector inputs and f outputs matrix of gradients of each input.
 a = [2,4,6]
 b = [1,3,5]
 c = [3,6,9]
