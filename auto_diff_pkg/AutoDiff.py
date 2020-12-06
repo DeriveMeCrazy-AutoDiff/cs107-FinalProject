@@ -4,14 +4,18 @@ import time
 class AutoDiff():
 
     def __init__(self, value, deriv=1.0, variables = 1, position = 0):
-        self.val = value
-        self.der = np.array(deriv)
+        if isinstance(value, (list, int, float)):
+            self.val = np.array([value]).T
+            self.der = np.ones((len(self.val),1))*deriv
+        elif isinstance(value, (np.ndarray, np.generic)):
+            self.val = value
+            self.der = deriv
         self.children = []
         self.grad_value = None
         
         if variables >1:
-            self.der = np.zeros(variables)
-            self.der[position] = 1
+            self.der = np.zeros((len(self.val),variables))
+            self.der[ : , position] = deriv
 
     def __neg__(self):
         return AutoDiff(-self.val, -self.der)
@@ -195,5 +199,22 @@ print(a.der)
 toc = time.perf_counter()
 print(f"Forward Mode {toc - tic} seconds")
 
+a = [2,4,6]
+b = [1,3,5]
+c = [3,6,9]
+x0=AutoDiff(a,1,3,0)
+x1=AutoDiff(b,1,3,1)
+x2=AutoDiff(c,1,3,2)
 
+f1 = x0 + x1 + x2
+f2 = 1*x0 + 2*x1 + 3*x2
+f3 = 1*x0*2*x1*3*x2
+f4 = x0**2 + x1**3 + x2**4
+f5 = x0/x1**x2
 
+F=[f1, f2, f3, f4, f5]
+print(F[0].der)
+print(F[1].der)
+print(F[2].der)
+print(F[3].der)
+print(F[4].der)
