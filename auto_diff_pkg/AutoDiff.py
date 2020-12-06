@@ -87,23 +87,6 @@ class AutoDiff():
             self.grad_value = sum(weight * var.reverse_mode()for weight, var in self.children)
         return self.grad_value
 
-def log(x):
-    try:
-        if x.val < 0:
-            raise ValueError('Log is not defined for negative values')
-        else:
-            return AutoDiff(np.log(x.val), x.der*(1/x.val))
-    except AttributeError:
-        if x < 0:
-            raise ValueError('Log is not defined for negative values')
-        else: 
-            return np.log(x)
-
-def exp(x):
-    try:
-        return AutoDiff(np.exp(x.val), x.der*np.exp(x.val))
-    except AttributeError:
-        return np.exp(x)
 
 def sin(x):
     try:
@@ -122,6 +105,25 @@ def tan(x):
         return AutoDiff(np.tan(x.val), x.der*(1/np.cos(x.val)**2))
     except AttributeError:
         return np.tan(x)
+
+def exp(x):
+    try:
+        return AutoDiff(np.exp(x.val), x.der*np.exp(x.val))
+    except AttributeError:
+        return np.exp(x)
+    
+def log(x,base = np.exp):
+    try:
+        if x.val < 0:
+            raise ValueError('Log is not defined for negative values')
+        else:
+            return AutoDiff(np.log(x.val)/np.log(base), x.der*(1/(x.val*np.log(base))))
+    except AttributeError:
+        if x < 0:
+            raise ValueError('Log is not defined for negative values')
+        else: 
+            return np.log(x)/np.log(base)
+   
     
 def sqrt(x):
     try:
