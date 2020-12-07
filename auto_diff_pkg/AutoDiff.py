@@ -7,7 +7,7 @@ class AutoDiff():
         if isinstance(value, (list, int, float)):
             self.val = np.array([value]).T
             self.der = np.ones((len(self.val),1))*deriv
-        #else isinstance(value, (np.ndarray, np.generic)):
+        #elif isinstance(value, (np.ndarray, np.generic)):
         else:
             self.val = value
             self.der = deriv
@@ -152,12 +152,12 @@ def tanh(x):
 def logistic(x):
     return 1/(1+exp(-x))
     
-def log(x,base = np.exp):
+def log(x,base = np.e):
     try:
         if x.val < 0:
             raise ValueError('Log is not defined for negative values')
         else:
-            return AutoDiff(np.log(x.val)/np.log(base), x.der*(1/(x.val*np.log(base))))
+            return AutoDiff(np.log(x.val)/np.log(base), (x.der/(x.val*np.log(base))))
     except AttributeError:
         if x < 0:
             raise ValueError('Log is not defined for negative values')
