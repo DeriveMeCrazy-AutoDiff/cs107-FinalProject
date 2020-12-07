@@ -7,7 +7,8 @@ class AutoDiff():
         if isinstance(value, (list, int, float)):
             self.val = np.array([value]).T
             self.der = np.ones((len(self.val),1))*deriv
-        elif isinstance(value, (np.ndarray, np.generic)):
+        #else isinstance(value, (np.ndarray, np.generic)):
+        else:
             self.val = value
             self.der = deriv
         self.children = []
