@@ -1,10 +1,22 @@
 import numpy as np
+import time
 
 class AutoDiff():
 
-    def __init__(self, value, deriv=1.0):
-        self.val = value
-        self.der = deriv
+    def __init__(self, value, deriv=1.0, variables = 1, position = 0):
+        if isinstance(value, (list, int, float)):
+            self.val = np.array([value]).T
+            self.der = np.ones((len(self.val),1))*deriv
+        #elif isinstance(value, (np.ndarray, np.generic)):
+        else:
+            self.val = value
+            self.der = deriv
+        self.children = []
+        self.grad_value = None
+        
+        if variables >1:
+            self.der = np.zeros((len(self.val),variables))
+            self.der[ : , position] = deriv
 
     def __neg__(self):
         return AutoDiff(-self.val, -self.der)
@@ -20,7 +32,10 @@ class AutoDiff():
           
     def __mul__(self, other):
         try:
-            return AutoDiff(self.val*other.val, self.der*other.val + self.val*other.der)
+            z = AutoDiff(self.val*other.val, self.der*other.val + self.val*other.der)
+            self.children.append((other.val, z))
+            other.children.append((self.val, z))
+            return z
         except AttributeError:
             return AutoDiff(self.val*other, self.der*other)
 
@@ -65,24 +80,14 @@ class AutoDiff():
     
     def __str__(self):
         return 'value: {}, derivative: {}'.format(self.val,self.der)
+    
+    def reverse_mode(self):
+        # recurse only if the value is not yet cached
+        if self.grad_value is None:
+            # calculate derivative using chain rule
+            self.grad_value = sum(weight * var.reverse_mode()for weight, var in self.children)
+        return self.grad_value
 
-def log(x):
-    try:
-        if x.val < 0:
-            raise ValueError('Log is not defined for negative values')
-        else:
-            return AutoDiff(np.log(x.val), x.der*(1/x.val))
-    except AttributeError:
-        if x < 0:
-            raise ValueError('Log is not defined for negative values')
-        else: 
-            return np.log(x)
-
-def exp(x):
-    try:
-        return AutoDiff(np.exp(x.val), x.der*np.exp(x.val))
-    except AttributeError:
-        return np.exp(x)
 
 def sin(x):
     try:
@@ -102,6 +107,63 @@ def tan(x):
     except AttributeError:
         return np.tan(x)
     
+def arcsin(x):
+    try:
+        return AutoDiff(np.arcsin(x.val), x.der/(np.sqrt(1-x.val**2)))
+    except AttributeError:
+        return np.arcsin(x)
+
+def arccos(x):
+    try:
+        return AutoDiff(np.arccos(x.val), -x.der/(np.sqrt(1-x.val**2)))
+    except AttributeError:
+        return np.arccos(x)
+    
+def arctan(x):
+    try:
+        return AutoDiff(np.arctan(x.val), x.der/((1+x.val**2)))
+    except AttributeError:
+        return np.arctan(x)
+
+def exp(x):
+    try:
+        return AutoDiff(np.exp(x.val), x.der*np.exp(x.val))
+    except AttributeError:
+        return np.exp(x)
+
+def sinh(x):
+    try:
+        return AutoDiff(np.sinh(x.val), x.der*np.cosh(x.val))
+    except AttributeError:
+        return np.sinh(x)
+
+def cosh(x):
+    try:
+        return AutoDiff(np.cosh(x.val), x.der*(np.sinh(x.val)))
+    except AttributeError:
+        return np.cosh(x)
+
+def tanh(x):
+    try:
+        return AutoDiff(np.tanh(x.val), x.der*(1-np.tanh(x.val)**2))
+    except AttributeError:
+        return np.tanh(x)
+    
+def logistic(x):
+    return 1/(1+exp(-x))
+    
+def log(x,base = np.e):
+    try:
+        if x.val < 0:
+            raise ValueError('Log is not defined for negative values')
+        else:
+            return AutoDiff(np.log(x.val)/np.log(base), (x.der/(x.val*np.log(base))))
+    except AttributeError:
+        if x < 0:
+            raise ValueError('Log is not defined for negative values')
+        else: 
+            return np.log(x)/np.log(base)
+    
 def sqrt(x):
     try:
         if x.val < 0:
@@ -112,4 +174,93 @@ def sqrt(x):
         if x < 0:
             raise ValueError('Sqrt is not defined for negative values')
         else: 
-            return np.sqrt(x)      
+            return np.sqrt(x)
+        
+def jacobian (variables, functions):
+    jacobian_array = np.empty((len(functions), len(variables)))  
+                                 
+    autodiff_list = []
+    for idx_val, val in enumerate(variables):
+        autodiff_list.append(AutoDiff(val,0))
+    for idx_diff, val  in enumerate(variables):
+        autodiff_list[idx_diff] = AutoDiff(val,1)
+        for idx_f, function  in enumerate(functions):
+            jacobian_array[idx_f,idx_diff] = function(*autodiff_list).der
+        autodiff_list[idx_diff] = AutoDiff(val,0)
+    return jacobian_array
+
+
+
+## Demos
+#function takes multiple functions and assigns parameters from list. outputs jacobian
+values = [1,2,4] 
+def f1(x0, x1, x2):
+    return (x0 + x1 + x2)
+def f2(x0, x1, x2):
+    return (1*x0 + 2*x1 + 3*x2)
+def f3(x0, x1, x2):
+    return (1*x0*2*x1*3*x2)
+def f4(x0, x1, x2):
+    return (x0**2 + x1**3 + x2**4)
+functions = [f1, f2, f3,f4]
+print(jacobian(values, functions), "\n")
+
+#Equation takes multiple values from autodiff, f.der returns gradient
+x0=AutoDiff(1,1,3,0)
+x1=AutoDiff(2,1,3,1)
+x2=AutoDiff(4,1,3,2)
+
+f1 = x0 + x1 + x2
+f2 = 1*x0 + 2*x1 + 3*x2
+f3 = 1*x0*2*x1*3*x2
+f4 = x0**2 + x1**3 + x2**4
+print(f4.der, "\n")
+
+F=[f1, f2, f3, f4]
+print(F[0].der)
+print(F[1].der)
+print(F[2].der)
+print(F[3].der)
+
+#Comparing Reverse mode and forward mode
+tic = time.perf_counter()
+x = AutoDiff(4)
+y = AutoDiff(.5)
+
+a = x * y
+a.grad_value = 1
+print(x.reverse_mode(), y.reverse_mode())
+toc = time.perf_counter()
+print(f"Reverse Mode {toc - tic} seconds")
+
+
+tic = time.perf_counter()
+x = AutoDiff(4,1,2,0)
+y = AutoDiff(.5,1,2,1)
+
+a = x * y
+
+print(a.der)
+toc = time.perf_counter()
+print(f"Forward Mode {toc - tic} seconds")
+
+#autodiff takes vector inputs and f outputs matrix of gradients of each input.
+a = [2,4,6]
+b = [1,3,5]
+c = [3,6,9]
+x0=AutoDiff(a,1,3,0)
+x1=AutoDiff(b,1,3,1)
+x2=AutoDiff(c,1,3,2)
+
+f1 = x0 + x1 + x2
+f2 = 1*x0 + 2*x1 + 3*x2
+f3 = 1*x0*2*x1*3*x2
+f4 = x0**2 + x1**3 + x2**4
+f5 = x0/x1**x2
+
+F=[f1, f2, f3, f4, f5]
+print(F[0].der)
+print(F[1].der)
+print(F[2].der)
+print(F[3].der)
+print(F[4].der)
