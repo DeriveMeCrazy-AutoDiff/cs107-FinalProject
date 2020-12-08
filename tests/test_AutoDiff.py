@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 #import auto_diff_pkg.AutoDiff as AutoDiff
 from  auto_diff_pkg.AutoDiff import AutoDiff, sqrt, sin, cos, exp, log, tan
 
+#final EPSILON = 10**(-12)
 epsilon = 10**(-12)
 
 def test_init_int_zero():    
@@ -155,6 +156,7 @@ def test_log_frac():
 def test_log_AutoDiff():    
     x0 = AutoDiff(10)
     curr_func = log(x0 ** 2)
+    real_log_val = 4.605170185988092
     assert curr_func.val == 4.605170185988092 and curr_func.der == 0.2
 
 def test_exp_frac():    

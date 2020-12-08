@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 class ReverseAutoDiff():
     def __init__(self, variables, functions, input_values):
@@ -10,6 +11,8 @@ class ReverseAutoDiff():
 class ReverseADNode:
     def __init__(self, value):
         self.value = value
+        if self.value is None:
+            raise TypeError('Node must have a value')
         self.children = []
         self.grad_value = None
         self.op = ''
@@ -20,11 +23,17 @@ class ReverseADNode:
         return self.grad_value
     
     def __add__(self, other):
+        if not isinstance(other, ReverseADNode):
+            other = ReverseADNode(other)
         node = ReverseADNode(self.value + other.value)
         self.children.append((1.0, node))
         other.children.append((1.0, node))
         node.op = 'ADD'
         return node
+    
+    def __radd__(self, other):
+        other = ReverseADNode(other)
+        return self.__add__(other)
     
     def __sub__(self, other):
         if not isinstance(other, ReverseADNode):
@@ -45,25 +54,31 @@ class ReverseADNode:
     
     def __inv__(self):
         node = ReverseADNode(1 / self.value)
-        self.children.append(-self.value ** -2, node)
+        self.children.append((-self.value ** -2, node))
         node.op = 'INV'
         return node
                      
     def __truediv__(self, other):
         if not isinstance(other, ReverseADNode):
             other = ReverseADNode(other)
-        return self.__mul__(other.__inv())
+        return self.__mul__(other.__inv__())
     
     def __rtruediv__(self, other):
         other = ReverseADNode(other)
-        return other.__mul__(self.__inv())
+        return other.__mul__(self.__inv__())
     
     def __mul__(self, other):
+        if not isinstance(other, ReverseADNode):
+            other = ReverseADNode(other)
         node = ReverseADNode(self.value * other.value)
         self.children.append((other.value, node))
         other.children.append((self.value, node))
         node.op = 'MUL/DIV'
         return node
+    
+    def __rmul__(self, other):
+        other = ReverseADNode(other)
+        return self.__mul__(other)
     
     def __pow__(self, other):
         if not isinstance(other, ReverseADNode):
@@ -176,7 +191,7 @@ def tanh(x):
     except AttributeError:
         return np.tanh(x)
     
-def log(x,base = np.exp):
+def log(x,base = math.e):
     try:
         if x.value < 0:
             raise ValueError('Log is not defined for negative values')
