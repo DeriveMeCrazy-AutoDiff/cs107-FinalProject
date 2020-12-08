@@ -4,10 +4,10 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="DeriveMeCrazy-AutoDiff",
+    name="auto_diff_pkg",
     version="0.0.1",
-    author="",
-    author_email="",
+    author="DeriveMeCrazy-AutoDiff Group 21",
+    author_email="jalling@g.harvard.edu, mod821@g.harvard.edu, tliu@g.harvard.edu, alk264@g.harvard.edu",
     description="A package for performing automatic differentiation",
     long_description=long_description,
     long_description_content_type="text/markdown",
