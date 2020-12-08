@@ -97,7 +97,7 @@ y = ReverseAutoDiff(0.5)
 z = ReverseAutoDiff(5)
 
 
-a = 4 + y * x 
+a = 1 + y * x 
 b = z - 2
 print("reverse mode res is ", a.reverse_mode())
 print("function value is ", a.val)
@@ -106,10 +106,10 @@ print("function value is ", b.val)
 
 a.graph()
 
-x = ReverseAutoDiff(4,1,2,1)
-y = ReverseAutoDiff(0.5,1,2,0)
+x = ReverseAutoDiff(4,1,2,0)
+y = ReverseAutoDiff(0.5,1,2,1)
 z = ReverseAutoDiff(5)
 
 
-a = 4 + y * x 
+a = 1 + 3*y*x + 2*x *y
 print("reverse mode res is ", a.reverse_mode())
