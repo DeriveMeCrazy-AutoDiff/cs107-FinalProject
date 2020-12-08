@@ -16,6 +16,6 @@ pip install .
 ## Usage
 The package can then be imported and utilized.
 ```
-import AutoDiff as AD
+import auto_diff_pkg.AutoDiff as AD
 ```
 Please see `docs/demo.ipynb` for demonstrations of the AutoDiff class.
