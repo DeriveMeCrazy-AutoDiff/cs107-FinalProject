@@ -263,7 +263,8 @@ def test_arcsin_ReverseADNode():
     x0 = ReverseADNode(0.8)
     curr_func = arcsin(x0 ** 2)
     curr_func.grad_value = 1.0
-    assert abs(curr_func.value - 0.25268025514207865) < epsilon and abs(x0.grad() - 2.082316825181415) < epsilon
+    assert abs(curr_func.value - 0.6944982656265561) < epsilon 
+    assert abs(x0.grad() - 2.082316825181415) < epsilon
 
 def test_arccos_frac():
     curr_func = arccos(0.5)
@@ -278,7 +279,8 @@ def test_arccos_ReverseADNode():
     x0 = ReverseADNode(0.8)
     curr_func = arccos(x0 ** 2)
     curr_func.grad_value = 1.0
-    assert abs(curr_func.value - 0.8762980611683405) < epsilon and abs(x0.grad() - -2.082316825181415) < epsilon
+    assert abs(curr_func.value - 0.8762980611683405) < epsilon 
+    assert abs(x0.grad() - -2.082316825181415) < epsilon
 
 def test_arctan_frac():
     curr_func = arctan(0.5)
@@ -292,7 +294,12 @@ def test_arctan_ReverseADNode():
     x0 = ReverseADNode(0.8)
     curr_func = arctan(x0 ** 2)
     curr_func.grad_value = 1.0
-    assert abs(curr_func.value - 0.5693131911006619) < epsilon and abs(x0.grad() - -1.1350737797956867) < epsilon
+    assert abs(curr_func.value - 0.5693131911006619) < epsilon 
+    assert abs(x0.grad() - 1.1350737797956867) < epsilon
+
+test_arcsin_ReverseADNode()
+test_arccos_ReverseADNode()
+test_arctan_ReverseADNode()
 
 def test_sinh_frac():
     curr_func = sinh(0.5)
