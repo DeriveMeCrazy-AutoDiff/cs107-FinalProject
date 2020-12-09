@@ -163,7 +163,6 @@ def test_pow_AutoDiff():
 
 def test_log():    
     curr_func = log(2)
-    curr_func.grad_value = 1.0
     assert curr_func == 0.6931471805599453
 
 def test_log_neg():    
