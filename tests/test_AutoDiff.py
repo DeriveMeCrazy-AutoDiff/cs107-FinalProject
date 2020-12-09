@@ -144,11 +144,6 @@ def test_log():
     curr_func = log(2)
     assert curr_func == 0.6931471805599453
 
-def test_log_neg():    
-    x0 = AutoDiff(-4)
-    with pytest.raises(ValueError):
-        curr_func = log(x0)
-
 def test_log_frac():    
     curr_func = log(0.5)
     assert curr_func == -0.6931471805599453
@@ -214,10 +209,6 @@ def test_tan_AutoDiff():
 def test_sqrt_frac():    
     curr_func = sqrt(0.5)
     assert curr_func == 0.7071067811865476
-
-def test_sqrt_neg():
-    with pytest.raises(ValueError):
-        curr_func = sqrt(-5)
 
 def test_sqrt_int():    
     curr_func = sqrt(5)
