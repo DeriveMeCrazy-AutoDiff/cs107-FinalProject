@@ -344,11 +344,11 @@ def test_jacobian_frac():
     def f5(x0, x1, x2):
         return (sin(x0) + cos(x1) + tan(x2))
     functions = [f1, f2, f3, f4, f5]
-    assert jacobian(values, functions)[0] == [1, 1, 1]
-    assert jacobian(values, functions)[1] == [1, 2, 3]
-    assert jacobian(values, functions)[2] == [0.48, 0.24, 0.12]
-    assert jacobian(values, functions)[3] == [0.2, 0.12, 0.256]
-    assert jacobian(values, functions)[4] == [0.9950041652780257, -0.19866933079506122, 1.178754105810975]
+    assert list(jacobian(values, functions)[0]) == [1, 1, 1]
+    assert list(jacobian(values, functions)[1]) == [1, 2, 3]
+    assert list(jacobian(values, functions)[2]) == [0.48, 0.24, 0.12]
+    assert list(jacobian(values, functions)[3]) == [0.2, 0.12, 0.256]
+    assert list(jacobian(values, functions)[4]) == [0.9950041652780257, -0.19866933079506122, 1.178754105810975]
 
 def test_jacobian_int():
     values = [1, 2, 4]
@@ -363,11 +363,11 @@ def test_jacobian_int():
     def f5(x0, x1, x2):
         return (sin(x0) + cos(x1) + tan(x2))
     functions = [f1, f2, f3, f4, f5]
-    assert jacobian(values, functions)[0] == [1, 1, 1]
-    assert jacobian(values, functions)[1] == [1, 2, 3]
-    assert jacobian(values, functions)[2] == [48, 24, 12]
-    assert jacobian(values, functions)[3] == [2, 12, 256]
-    assert jacobian(values, functions)[4] == [0.5403023058681398, -0.9092974268256817, 2.34055012186162]
+    assert list(jacobian(values, functions)[0]) == [1, 1, 1]
+    assert list(jacobian(values, functions)[1]) == [1, 2, 3]
+    assert list(jacobian(values, functions)[2]) == [48, 24, 12]
+    assert list(jacobian(values, functions)[3]) == [2, 12, 256]
+    assert list(jacobian(values, functions)[4]) == [0.5403023058681398, -0.9092974268256817, 2.34055012186162]
 
 # --- updated: vectors
 
