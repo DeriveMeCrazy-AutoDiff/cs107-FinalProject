@@ -75,6 +75,18 @@ class AutoDiff():
     def __str__(self):
         return 'value: {}, derivative: {}'.format(self.val,self.der)
     
+    def __eq__ (self, other):
+        try:
+            return ((self.val == other.val) and (self.der == other.der))
+        except AttributeError:
+            return False
+    
+    def __ne__(self, other):
+        try:
+            return ((self.val != other.val) or (self.der != other.der))
+        except AttributeError:
+            return True
+    
     def reverse_mode(self):
         # recurse only if the value is not yet cached
         if self.grad_value is None:
@@ -170,4 +182,3 @@ def jacobian (variables, functions):
         jacobian_array[idx_f] = function(*autodiff_list).der[0]
 
     return jacobian_array
-
