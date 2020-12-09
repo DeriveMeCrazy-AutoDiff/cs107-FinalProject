@@ -10,9 +10,7 @@ class AutoDiff():
         else:
             self.val = np.array([value]).T
             self.der = np.ones((len(self.val),1))*deriv
-        self.children = []
-        self.grad_value = None
-        
+
         if variables >1:
             self.der = np.zeros((len(self.val),variables))
             self.der[ : , position] = deriv
@@ -31,10 +29,7 @@ class AutoDiff():
           
     def __mul__(self, other):
         try:
-            z = AutoDiff(self.val*other.val, self.der*other.val + self.val*other.der)
-            self.children.append((other.val, z))
-            other.children.append((self.val, z))
-            return z
+            return AutoDiff(self.val*other.val, self.der*other.val + self.val*other.der)
         except AttributeError:
             return AutoDiff(self.val*other, self.der*other)
 
