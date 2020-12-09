@@ -346,9 +346,11 @@ def test_jacobian_frac():
     functions = [f1, f2, f3, f4, f5]
     assert list(jacobian(values, functions)[0]) == [1, 1, 1]
     assert list(jacobian(values, functions)[1]) == [1, 2, 3]
-    assert list(jacobian(values, functions)[2]) == [0.48, 0.24, 0.12]
-    assert list(jacobian(values, functions)[3]) == [0.2, 0.12, 0.256]
-    assert list(jacobian(values, functions)[4]) == [0.9950041652780257, -0.19866933079506122, 1.178754105810975]
+    assert abs(jacobian(values, functions)[2][0] - 0.48)<epsilon and abs(jacobian(values, functions)[2][1] - 0.24)<epsilon and abs(jacobian(values, functions)[2][2] - 0.12)<epsilon
+    assert abs(jacobian(values, functions)[3][0] - 0.2) < epsilon and abs(jacobian(values, functions)[3][1] - 0.12) < epsilon and abs(jacobian(values, functions)[3][2] - 0.256) < epsilon
+    #assert list(jacobian(values, functions)[3]) == [0.2, 0.12, 0.256]
+    assert abs(jacobian(values, functions)[4][0] - 0.9950041652780257) < epsilon and abs(jacobian(values, functions)[4][1] - -0.19866933079506122) < epsilon and abs(jacobian(values, functions)[4][2] - 1.178754105810975) < epsilon
+    #assert list(jacobian(values, functions)[4]) == [0.9950041652780257, -0.19866933079506122, 1.178754105810975]
 
 def test_jacobian_int():
     values = [1, 2, 4]
