@@ -10,9 +10,7 @@ class AutoDiff():
         else:
             self.val = np.array([value]).T
             self.der = np.ones((len(self.val),1))*deriv
-        self.children = []
-        self.grad_value = None
-        
+
         if variables >1:
             self.der = np.zeros((len(self.val),variables))
             self.der[ : , position] = deriv
@@ -31,10 +29,7 @@ class AutoDiff():
           
     def __mul__(self, other):
         try:
-            z = AutoDiff(self.val*other.val, self.der*other.val + self.val*other.der)
-            self.children.append((other.val, z))
-            other.children.append((self.val, z))
-            return z
+            return AutoDiff(self.val*other.val, self.der*other.val + self.val*other.der)
         except AttributeError:
             return AutoDiff(self.val*other, self.der*other)
 
@@ -79,6 +74,18 @@ class AutoDiff():
     
     def __str__(self):
         return 'value: {}, derivative: {}'.format(self.val,self.der)
+    
+    def __eq__ (self, other):
+        try:
+            return ((self.val == other.val) and (self.der == other.der))
+        except AttributeError:
+            return False
+    
+    def __ne__(self, other):
+        try:
+            return ((self.val != other.val) or (self.der != other.der))
+        except AttributeError:
+            return True
     
     def reverse_mode(self):
         # recurse only if the value is not yet cached
@@ -175,4 +182,3 @@ def jacobian (variables, functions):
         jacobian_array[idx_f] = function(*autodiff_list).der[0]
 
     return jacobian_array
-
