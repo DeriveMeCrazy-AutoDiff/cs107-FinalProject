@@ -170,7 +170,7 @@ def sqrt(x):
         return np.sqrt(x)
         
 def jacobian (variables, functions):
-    jacobian_array = np.empty((len(functions), 3))                             
+    jacobian_array = np.empty((len(functions), len(variables)))                             
     autodiff_list = []
     var_size = len(variables)
     
