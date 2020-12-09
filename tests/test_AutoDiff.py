@@ -520,7 +520,7 @@ def test_div_vector():
     assert F[1].der[2][0] == -0.05555555555555555 and F[1].der[2][1] == 0 and F[1].der[2][2] == 0 and F[1].der[2][3] == 0
 
     assert F[2].der[0][0] == 2 and F[2].der[0][1] == -4 and F[2].der[0][2] == 0 and F[2].der[0][3] == 0
-    assert F[2].der[1][0] == 5 and F[2].der[1][1] == -50 and F[2].der[1][2] == 0 and F[2].der[1][3] == 0
+    assert abs(F[2].der[1][0] - 5)<epsilon and F[2].der[1][1] == -50 and F[2].der[1][2] == 0 and F[2].der[1][3] == 0
     assert F[2].der[2][0] == 10 and F[2].der[2][1] == -300 and F[2].der[2][2] == 0 and F[2].der[2][3] == 0
 
     assert F[3].der[0][0] == 3.33333333333333333 and F[3].der[0][1] == -6.6666666666666666 and F[3].der[0][2] == -1.66666666666666666 and F[3].der[0][3] == -11.11111111111111
@@ -647,12 +647,12 @@ def test_logistic_vector():
     assert F[1].val[0][0] == 0.6224593312018546 and F[1].val[1][0] == 0.6899744811276125 and F[1].val[2][0] == 0.7109495026250039
     # der: len_val x num_var
     assert abs(F[0].der[0][0] - 0.060353225313238106)<epsilon and abs(F[0].der[0][1] - 0.060353225313238106)<epsilon
-    assert F[0].der[1][0] == 0.058001910806045796 and F[0].der[1][1] == 0.058001910806045796
-    assert F[0].der[2][0] == 0.0539805715195846 and F[0].der[2][1] == 0.0539805715195846
+    assert abs(F[0].der[1][0] - 0.058001910806045796)<epsilon and abs(F[0].der[1][1] - 0.058001910806045796)<epsilon
+    assert abs(F[0].der[2][0] - 0.0539805715195846)<epsilon and abs(F[0].der[2][1] - 0.0539805715195846)<epsilon
 
-    assert F[1].der[0][0] == 0.2350037122015945 and F[1].der[0][1] == 0.2350037122015945
-    assert F[1].der[1][0] == 0.17112775721623552 and F[1].der[1][1] == 0.8556387860811776
-    assert F[1].der[2][0] == 0.1233001844053581 and F[1].der[2][1] == 1.8495027660803713
+    assert abs(F[1].der[0][0] - 0.2350037122015945)<epsilon and abs(F[1].der[0][1] - 0.2350037122015945)<epsilon
+    assert abs(F[1].der[1][0] - 0.17112775721623552)<epsilon and abs(F[1].der[1][1] - 0.8556387860811776)<epsilon
+    assert abs(F[1].der[2][0] - 0.1233001844053581)<epsilon and abs(F[1].der[2][1] - 1.8495027660803713)<epsilon
 
 def test_sin_vector():
     a = [1, 2, 3]
@@ -673,8 +673,8 @@ def test_sin_vector():
     assert F[0].der[2][0] == 0.17860525851398285 and F[0].der[2][1] == 0.17860525851398285
 
     assert F[1].der[0][0] == 0.8775825618903728 and F[1].der[0][1] == 0.8775825618903728
-    assert F[1].der[1][0] == 0.5573653674777325 and F[1].der[1][1] == 2.786826837388662
-    assert F[1].der[2][0] == 0.37296598096239875 and F[1].der[2][1] == 5.594489714435981
+    assert abs(F[1].der[1][0] - 0.5573653674777325)<epsilon and abs(F[1].der[1][1] - 2.786826837388662)<epsilon
+    assert abs(F[1].der[2][0] - 0.37296598096239875)<epsilon and abs(F[1].der[2][1] - 5.594489714435981)<epsilon
 
 def test_cos_vector():
     a = [1, 2, 3]
@@ -696,7 +696,7 @@ def test_cos_vector():
 
     assert F[1].der[0][0] == -0.479425538604203 and F[1].der[0][1] == -0.479425538604203
     assert F[1].der[1][0] == -0.5738848727196183 and F[1].der[1][1] == -2.869424363598091
-    assert F[1].der[2][0] == -0.46999614577649007 and F[1].der[2][1] == -7.04994218664735
+    assert abs(F[1].der[2][0] - -0.46999614577649007)<epsilon and abs(F[1].der[2][1] - -7.04994218664735)<epsilon
 
 def test_tan_vector():
     a = [1, 2, 3]
@@ -710,15 +710,15 @@ def test_tan_vector():
     F = [f0, f1]
 
     assert F[0].val[0][0] == 0.39362657592563277 and F[0].val[1][0] == 0.6131052132881357 and abs(F[0].val[2][0] - 0.9794169572166087)<epsilon
-    assert F[1].val[0][0] == 0.5463024898437905 and abs(F[1].val[1][0] - 1.029638557050364)<epsilon and F[1].val[2][0] == 1.260158217550339
+    assert F[1].val[0][0] == 0.5463024898437905 and abs(F[1].val[1][0] - 1.029638557050364)<epsilon and abs(F[1].val[2][0] - 1.260158217550339)<epsilon
     # der: len_val x num_var
-    assert F[0].der[0][0] == 0.2887354703187345 and F[0].der[0][1] == 0.2887354703187345
-    assert F[0].der[1][0] == 0.34397450064027263 and F[0].der[1][1] == 0.34397450064027263
-    assert F[0].der[2][0] == 0.48981439402086013 and F[0].der[2][1] == 0.48981439402086013
+    assert abs(F[0].der[0][0] - 0.2887354703187345)<epsilon and abs(F[0].der[0][1] - 0.2887354703187345)<epsilon
+    assert abs(F[0].der[1][0] - 0.34397450064027263)<epsilon and abs(F[0].der[1][1] - 0.34397450064027263)<epsilon
+    assert abs(F[0].der[2][0] - 0.48981439402086013)<epsilon and abs(F[0].der[2][1] - 0.48981439402086013)<epsilon
 
-    assert F[1].der[0][0] == 1.2984464104095248 and F[1].der[0][1] == 1.2984464104095248
-    assert F[1].der[1][0] == 1.6481244465318043 and F[1].der[1][1] == 8.240622232659021
-    assert F[1].der[2][0] == 1.5527992399557886 and F[1].der[2][1] == 23.291988599336825
+    assert abs(F[1].der[0][0] - 1.2984464104095248)<epsilon and abs(F[1].der[0][1] - 1.2984464104095248)<epsilon
+    assert abs(F[1].der[1][0] - 1.6481244465318043)<epsilon and abs(F[1].der[1][1] - 8.240622232659021)<epsilon
+    assert abs(F[1].der[2][0] - 1.5527992399557886)<epsilon and abs(F[1].der[2][1] - 23.291988599336825)<epsilon
 
 def test_sinh_vector():
     a = [1, 2, 3]
@@ -783,8 +783,8 @@ def test_tanh_vector():
     assert F[0].der[2][0] == 0.14443106686442975 and F[0].der[2][1] == 0.14443106686442975
 
     assert F[1].der[0][0] == 0.7864477329659274 and F[1].der[0][1] == 0.7864477329659274
-    assert abs(F[1].der[1][0] - 0.4472441341857952)<epsilon and F[1].der[1][1] == 2.236220670928976
-    assert F[1].der[2][0] == 0.29215041668900493 and F[1].der[2][1] == 4.3822562503350735
+    assert abs(F[1].der[1][0] - 0.4472441341857952)<epsilon and abs(F[1].der[1][1] - 2.236220670928976)<epsilon
+    assert abs(F[1].der[2][0] - 0.29215041668900493)<epsilon and abs(F[1].der[2][1] - 4.3822562503350735)<epsilon
 
 def test_sqrt_vector():
     a = [1, 2, 3]
