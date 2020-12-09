@@ -154,27 +154,15 @@ def logistic(x):
     
 def log(x,base = np.e):
     try:
-        if x.val < 0:
-            raise ValueError('Log is not defined for negative values')
-        else:
-            return AutoDiff(np.log(x.val)/np.log(base), (x.der/(x.val*np.log(base))))
+        return AutoDiff(np.log(x.val)/np.log(base), (x.der/(x.val*np.log(base))))
     except AttributeError:
-        if x < 0:
-            raise ValueError('Log is not defined for negative values')
-        else: 
-            return np.log(x)/np.log(base)
+        return np.log(x)/np.log(base)
     
 def sqrt(x):
     try:
-        if x.val < 0:
-            raise ValueError('Sqrt is not defined for negative values')
-        else:
-            return AutoDiff(np.sqrt(x.val), (1/2)*x.der/(np.sqrt(x.val)))
+        return AutoDiff(np.sqrt(x.val), (1/2)*x.der/(np.sqrt(x.val)))
     except AttributeError:
-        if x < 0:
-            raise ValueError('Sqrt is not defined for negative values')
-        else: 
-            return np.sqrt(x)
+        return np.sqrt(x)
         
 def jacobian (variables, functions):
     jacobian_array = np.empty((len(functions), len(variables)))  
