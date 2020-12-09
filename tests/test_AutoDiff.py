@@ -243,7 +243,7 @@ def test_arcsin_int():
 def test_arcsin_AutoDiff():
     x0 = AutoDiff(0.8)
     curr_func = arcsin(x0 ** 2)
-    assert curr_func.val == 0.25268025514207865 and curr_func.der == 2.082316825181415
+    assert curr_func.val == 0.6944982656265561 and curr_func.der == 2.082316825181415
 
 def test_arccos_frac():
     curr_func = arccos(0.5)
@@ -260,7 +260,7 @@ def test_arccos_int():
 def test_arccos_AutoDiff():
     x0 = AutoDiff(0.8)
     curr_func = arccos(x0 ** 2)
-    assert curr_func.val == 0.8762980611683405 and curr_func.der == -2.082316825181415
+    assert curr_func.val == 0.8762980611683404 and curr_func.der == -2.082316825181415
 
 def test_arctan_frac():
     curr_func = arctan(0.5)
@@ -486,7 +486,7 @@ def test_mul_vector():
 
     assert F[3].der[0][0] == 0.3 and F[3].der[0][1] == 0.6 and F[3].der[0][2] == 0.15 and F[3].der[0][3] == 1
     assert F[3].der[1][0] == 0.48 and F[3].der[1][1] == 4.8 and F[3].der[1][2] == 0.24 and F[3].der[1][3] == 1.6
-    assert F[3].der[2][0] == 0.54 and F[3].der[2][1] == 16.2 and F[3].der[2][2] == 0.27 and F[3].der[2][3] == 1.8
+    assert abs(F[3].der[2][0] - 0.54)<epsilon and abs(F[3].der[2][1] - 16.2)<epsilon and abs(F[3].der[2][2] - 0.27)<epsilon and abs(F[3].der[2][3] - 1.8)<epsilon
 
 def test_div_vector():
     a = [1, 2, 3]
@@ -520,12 +520,12 @@ def test_div_vector():
     assert F[1].der[2][0] == -0.05555555555555555 and F[1].der[2][1] == 0 and F[1].der[2][2] == 0 and F[1].der[2][3] == 0
 
     assert F[2].der[0][0] == 2 and F[2].der[0][1] == -4 and F[2].der[0][2] == 0 and F[2].der[0][3] == 0
-    assert abs(F[2].der[1][0] - 5)<epsilon and F[2].der[1][1] == -50 and F[2].der[1][2] == 0 and F[2].der[1][3] == 0
-    assert F[2].der[2][0] == 10 and F[2].der[2][1] == -300 and F[2].der[2][2] == 0 and F[2].der[2][3] == 0
+    assert abs(F[2].der[1][0] - 5)<epsilon and abs(F[2].der[1][1] - -50)<epsilon and F[2].der[1][2] == 0 and F[2].der[1][3] == 0
+    assert abs(F[2].der[2][0] - 10)<epsilon and abs(F[2].der[2][1] - -300)<epsilon and F[2].der[2][2] == 0 and F[2].der[2][3] == 0
 
-    assert F[3].der[0][0] == 3.33333333333333333 and F[3].der[0][1] == -6.6666666666666666 and F[3].der[0][2] == -1.66666666666666666 and F[3].der[0][3] == -11.11111111111111
-    assert F[3].der[1][0] == 2.08333333333333333 and F[3].der[1][1] == -20.833333333333333 and F[3].der[1][2] == -1.04166666666666666 and F[3].der[1][3] == -6.9444444444444444
-    assert F[3].der[2][0] == 1.8518518518518519 and F[3].der[2][1] == -55.555555555555555 and F[3].der[2][2] == -0.925925925925926 and F[3].der[2][3] == -6.172839506172839
+    assert abs(F[3].der[0][0] - 3.33333333333333333)<epsilon and abs(F[3].der[0][1] - -6.6666666666666666)<epsilon and abs(F[3].der[0][2] - -1.66666666666666666)<epsilon and abs(F[3].der[0][3] - -11.11111111111111)<epsilon
+    assert abs(F[3].der[1][0] - 2.08333333333333333)<epsilon and abs(F[3].der[1][1] - -20.833333333333333)<epsilon and abs(F[3].der[1][2] - -1.04166666666666666)<epsilon and abs(F[3].der[1][3] - -6.9444444444444444)<epsilon
+    assert abs(F[3].der[2][0] - 1.8518518518518519)<epsilon and abs(F[3].der[2][1] - -55.555555555555555)<epsilon and abs(F[3].der[2][2] - -0.925925925925926)<epsilon and abs(F[3].der[2][3] - -6.172839506172839)<epsilon
 
 def test_pow_vector():
     a = [1, 2, 3]
