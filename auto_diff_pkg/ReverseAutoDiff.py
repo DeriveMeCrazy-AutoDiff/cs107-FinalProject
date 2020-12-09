@@ -1,13 +1,6 @@
 import numpy as np
 import math
 
-class ReverseAutoDiff():
-    def __init__(self, variables, functions, input_values):
-        self.graph = []
-        self.variables = variables
-        self.functions = functions
-    
-
 class ReverseADNode:
     def __init__(self, value):
         self.value = value
@@ -220,3 +213,20 @@ def sqrt(x):
             raise ValueError('Sqrt is not defined for negative values')
         else: 
             return np.sqrt(x)
+
+def jacobian (variables, functions):
+    jacobian_array = np.empty((len(functions), len(variables)))                                
+    gradients_dict = {}
+    
+    for index, func in enumerate(functions):
+        #creating the variables list
+        gradients_dict[index] = [] 
+        for idx_diff, val  in enumerate(variables):
+            gradients_dict[index].append(ReverseADNode(val))
+        #call the function with the new vars 
+        functions[index](*(gradients_dict[index])).grad_value = 1.0
+    #loop through to construct the matrix 
+    for idx_f, function  in enumerate(functions):
+        for idx_v, var in enumerate(gradients_dict[idx_f]):
+            jacobian_array[idx_f][idx_v] = var.grad()
+    return jacobian_array
