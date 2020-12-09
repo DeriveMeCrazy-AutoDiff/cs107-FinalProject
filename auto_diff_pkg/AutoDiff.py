@@ -8,7 +8,7 @@ class AutoDiff():
             self.der = deriv
         else:
             self.val = np.array([value]).T
-            self.der = np.ones((len(self.val),1))*deriv
+            self.der = np.ones(len(self.val))*deriv
 
         if variables >1:
             self.der = np.zeros((len(self.val),variables))
