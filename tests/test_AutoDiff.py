@@ -374,147 +374,197 @@ def test_jacobian_int():
 def test_add_vector():
     a = [1, 2, 3]
     b = [0.5, 0.2, 0.1]
+    c = [2, 4, 6]
+    d = [0.3, 0.6, 0.9]
 
-    x0 = AutoDiff(a, 1, 2, 0)
-    x1 = AutoDiff(b, 1, 2, 1)
+    x0 = AutoDiff(a, 1, 4, 0)
+    x1 = AutoDiff(b, 1, 4, 1)
+    x2 = AutoDiff(c, 1, 4, 2)
+    x3 = AutoDiff(d, 1, 4, 3)
 
     f0 = x0 + 1  # testing add int
     f1 = 0.5 + x0  # testing radd frac
     f2 = x0 + x1  # testing AutoDiff
-    F = [f0, f1, f2]
+    f3 = x0 + x1 + x2 + x3  # testing 4 var
+    F = [f0, f1, f2, f3]
 
     assert F[0].val[0][0] == 2 and F[0].val[1][0] == 3 and F[0].val[2][0] == 4
     assert F[1].val[0][0] == 1.5 and F[1].val[1][0] == 2.5 and F[1].val[2][0] == 3.5
     assert F[2].val[0][0] == 1.5 and F[2].val[1][0] == 2.2 and F[2].val[2][0] == 3.1
+    assert F[3].val[0][0] == 3.8 and F[3].val[1][0] == 6.8 and F[3].val[2][0] == 10
 
     # der: len_val x num_var
-    assert F[0].der[0][0] == 1 and F[0].der[0][1] == 0
-    assert F[0].der[1][0] == 1 and F[0].der[1][1] == 0
-    assert F[0].der[2][0] == 1 and F[0].der[2][1] == 0
+    assert F[0].der[0][0] == 1 and F[0].der[0][1] == 0 and F[0].der[0][2] == 0 and F[0].der[0][3] == 0
+    assert F[0].der[1][0] == 1 and F[0].der[1][1] == 0 and F[0].der[1][2] == 0 and F[0].der[1][3] == 0
+    assert F[0].der[2][0] == 1 and F[0].der[2][1] == 0 and F[0].der[2][2] == 0 and F[0].der[2][3] == 0
 
-    assert F[1].der[0][0] == 1 and F[1].der[0][1] == 0
-    assert F[1].der[1][0] == 1 and F[1].der[1][1] == 0
-    assert F[1].der[2][0] == 1 and F[1].der[2][1] == 0
+    assert F[1].der[0][0] == 1 and F[1].der[0][1] == 0 and F[1].der[0][2] == 0 and F[1].der[0][3] == 0
+    assert F[1].der[1][0] == 1 and F[1].der[1][1] == 0 and F[1].der[1][2] == 0 and F[1].der[1][3] == 0
+    assert F[1].der[2][0] == 1 and F[1].der[2][1] == 0 and F[1].der[2][2] == 0 and F[1].der[2][3] == 0
 
-    assert F[2].der[0][0] == 1 and F[2].der[0][1] == 1
-    assert F[2].der[1][0] == 1 and F[2].der[1][1] == 1
-    assert F[2].der[2][0] == 1 and F[2].der[2][1] == 1
+    assert F[2].der[0][0] == 1 and F[2].der[0][1] == 1 and F[2].der[0][2] == 0 and F[2].der[0][3] == 0
+    assert F[2].der[1][0] == 1 and F[2].der[1][1] == 1 and F[2].der[1][2] == 0 and F[2].der[1][3] == 0
+    assert F[2].der[2][0] == 1 and F[2].der[2][1] == 1 and F[2].der[2][2] == 0 and F[2].der[2][3] == 0
+
+    assert F[3].der[0][0] == 1 and F[3].der[0][1] == 1 and F[3].der[0][2] == 1 and F[3].der[0][3] == 1
+    assert F[3].der[1][0] == 1 and F[3].der[1][1] == 1 and F[3].der[1][2] == 1 and F[3].der[1][3] == 1
+    assert F[3].der[2][0] == 1 and F[3].der[2][1] == 1 and F[3].der[2][2] == 1 and F[3].der[2][3] == 1
 
 def test_sub_vector():
     a = [1, 2, 3]
     b = [0.5, 0.2, 0.1]
+    c = [2, 4, 6]
+    d = [0.3, 0.6, 0.9]
 
-    x0 = AutoDiff(a, 1, 2, 0)
-    x1 = AutoDiff(b, 1, 2, 1)
+    x0 = AutoDiff(a, 1, 4, 0)
+    x1 = AutoDiff(b, 1, 4, 1)
+    x2 = AutoDiff(c, 1, 4, 2)
+    x3 = AutoDiff(d, 1, 4, 3)
 
     f0 = x0 - 1  # testing sub int
     f1 = 0.5 - x0  # testing rsub frac
     f2 = x0 - x1  # testing AutoDiff
-    F = [f0, f1, f2]
+    f3 = x0 - x1 - x2 - x3  # testing 4 var
+    F = [f0, f1, f2, f3]
 
     assert F[0].val[0][0] == 0 and F[0].val[1][0] == 1 and F[0].val[2][0] == 2
     assert F[1].val[0][0] == -0.5 and F[1].val[1][0] == -1.5 and F[1].val[2][0] == -2.5
     assert F[2].val[0][0] == 0.5 and F[2].val[1][0] == 1.8 and F[2].val[2][0] == 2.9
+    assert F[3].val[0][0] == -1.8 and F[3].val[1][0] == -2.8 and F[3].val[2][0] == -4
 
     # der: len_val x num_var
-    assert F[0].der[0][0] == 1 and F[0].der[0][1] == 0
-    assert F[0].der[1][0] == 1 and F[0].der[1][1] == 0
-    assert F[0].der[2][0] == 1 and F[0].der[2][1] == 0
+    assert F[0].der[0][0] == 1 and F[0].der[0][1] == 0 and F[0].der[0][2] == 0 and F[0].der[0][3] == 0
+    assert F[0].der[1][0] == 1 and F[0].der[1][1] == 0 and F[0].der[1][2] == 0 and F[0].der[1][3] == 0
+    assert F[0].der[2][0] == 1 and F[0].der[2][1] == 0 and F[0].der[2][2] == 0 and F[0].der[2][3] == 0
 
-    assert F[1].der[0][0] == -1 and F[1].der[0][1] == 0
-    assert F[1].der[1][0] == -1 and F[1].der[1][1] == 0
-    assert F[1].der[2][0] == -1 and F[1].der[2][1] == 0
+    assert F[1].der[0][0] == -1 and F[1].der[0][1] == 0 and F[1].der[0][2] == 0 and F[1].der[0][3] == 0
+    assert F[1].der[1][0] == -1 and F[1].der[1][1] == 0 and F[1].der[1][2] == 0 and F[1].der[1][3] == 0
+    assert F[1].der[2][0] == -1 and F[1].der[2][1] == 0 and F[1].der[2][2] == 0 and F[1].der[2][3] == 0
 
-    assert F[2].der[0][0] == 1 and F[2].der[0][1] == -1
-    assert F[2].der[1][0] == 1 and F[2].der[1][1] == -1
-    assert F[2].der[2][0] == 1 and F[2].der[2][1] == -1
+    assert F[2].der[0][0] == 1 and F[2].der[0][1] == -1 and F[2].der[0][2] == 0 and F[2].der[0][3] == 0
+    assert F[2].der[1][0] == 1 and F[2].der[1][1] == -1 and F[2].der[1][2] == 0 and F[2].der[1][3] == 0
+    assert F[2].der[2][0] == 1 and F[2].der[2][1] == -1 and F[2].der[2][2] == 0 and F[2].der[2][3] == 0
+
+    assert F[3].der[0][0] == 1 and F[3].der[0][1] == -1 and F[3].der[0][2] == -1 and F[3].der[0][3] == -1
+    assert F[3].der[1][0] == 1 and F[3].der[1][1] == -1 and F[3].der[1][2] == -1 and F[3].der[1][3] == -1
+    assert F[3].der[2][0] == 1 and F[3].der[2][1] == -1 and F[3].der[2][2] == -1 and F[3].der[2][3] == -1
 
 def test_mul_vector():
     a = [1, 2, 3]
     b = [0.5, 0.2, 0.1]
+    c = [2, 4, 6]
+    d = [0.3, 0.6, 0.9]
 
-    x0 = AutoDiff(a, 1, 2, 0)
-    x1 = AutoDiff(b, 1, 2, 1)
+    x0 = AutoDiff(a, 1, 4, 0)
+    x1 = AutoDiff(b, 1, 4, 1)
+    x2 = AutoDiff(c, 1, 4, 2)
+    x3 = AutoDiff(d, 1, 4, 3)
 
     f0 = x0 * 3  # testing mul int
     f1 = 0.5 * x0  # testing rmul frac
     f2 = x0 * x1  # testing AutoDiff
-    F = [f0, f1, f2]
+    f3 = x0 * x1 * x2 * x3  # testing 4 var
+    F = [f0, f1, f2, f3]
 
     assert F[0].val[0][0] == 3 and F[0].val[1][0] == 6 and F[0].val[2][0] == 9
     assert F[1].val[0][0] == 0.5 and F[1].val[1][0] == 1 and F[1].val[2][0] == 1.5
     assert F[2].val[0][0] == 0.5 and F[2].val[1][0] == 0.4 and F[2].val[2][0] == 0.3
+    assert F[3].val[0][0] == 0.3 and F[3].val[1][0] == 0.96 and F[3].val[2][0] == 1.62
 
     # der: len_val x num_var
-    assert F[0].der[0][0] == 3 and F[0].der[0][1] == 0
-    assert F[0].der[1][0] == 3 and F[0].der[1][1] == 0
-    assert F[0].der[2][0] == 3 and F[0].der[2][1] == 0
+    assert F[0].der[0][0] == 3 and F[0].der[0][1] == 0 and F[0].der[0][2] == 0 and F[0].der[0][3] == 0
+    assert F[0].der[1][0] == 3 and F[0].der[1][1] == 0 and F[0].der[1][2] == 0 and F[0].der[1][3] == 0
+    assert F[0].der[2][0] == 3 and F[0].der[2][1] == 0 and F[0].der[2][2] == 0 and F[0].der[2][3] == 0
 
-    assert F[1].der[0][0] == 0.5 and F[1].der[0][1] == 0
-    assert F[1].der[1][0] == 0.5 and F[1].der[1][1] == 0
-    assert F[1].der[2][0] == 0.5 and F[1].der[2][1] == 0
+    assert F[1].der[0][0] == 0.5 and F[1].der[0][1] == 0 and F[1].der[0][2] == 0 and F[1].der[0][3] == 0
+    assert F[1].der[1][0] == 0.5 and F[1].der[1][1] == 0 and F[1].der[1][2] == 0 and F[1].der[1][3] == 0
+    assert F[1].der[2][0] == 0.5 and F[1].der[2][1] == 0 and F[1].der[2][2] == 0 and F[1].der[2][3] == 0
 
-    assert F[2].der[0][0] == 0.5 and F[2].der[0][1] == 1
-    assert F[2].der[1][0] == 0.2 and F[2].der[1][1] == 2
-    assert F[2].der[2][0] == 0.1 and F[2].der[2][1] == 3
+    assert F[2].der[0][0] == 0.5 and F[2].der[0][1] == 1 and F[2].der[0][2] == 0 and F[2].der[0][3] == 0
+    assert F[2].der[1][0] == 0.2 and F[2].der[1][1] == 2 and F[2].der[1][2] == 0 and F[2].der[1][3] == 0
+    assert F[2].der[2][0] == 0.1 and F[2].der[2][1] == 3 and F[2].der[2][2] == 0 and F[2].der[2][3] == 0
+
+    assert F[3].der[0][0] == 0.3 and F[3].der[0][1] == 0.6 and F[3].der[0][2] == 0.15 and F[3].der[0][3] == 1
+    assert F[3].der[1][0] == 0.48 and F[3].der[1][1] == 4.8 and F[3].der[1][2] == 0.24 and F[3].der[1][3] == 1.6
+    assert F[3].der[2][0] == 0.54 and F[3].der[2][1] == 16.2 and F[3].der[2][2] == 0.27 and F[3].der[2][3] == 1.8
 
 def test_div_vector():
     a = [1, 2, 3]
     b = [0.5, 0.2, 0.1]
+    c = [2, 4, 6]
+    d = [0.3, 0.6, 0.9]
 
-    x0 = AutoDiff(a, 1, 2, 0)
-    x1 = AutoDiff(b, 1, 2, 1)
+    x0 = AutoDiff(a, 1, 4, 0)
+    x1 = AutoDiff(b, 1, 4, 1)
+    x2 = AutoDiff(c, 1, 4, 2)
+    x3 = AutoDiff(d, 1, 4, 3)
 
-    f0 = x0 / 3  # testing mul int
-    f1 = 0.5 / x0  # testing rmul frac
+    f0 = x0 / 3  # testing div int
+    f1 = 0.5 / x0  # testing rdiv frac
     f2 = x0 / x1  # testing AutoDiff
-    F = [f0, f1, f2]
+    f3 = x0 / x1 / x2 / x3  # testing 4 var
+    F = [f0, f1, f2, f3]
 
-    assert F[0].val[0][0] == 0.3333333333333 and F[0].val[1][0] == 0.6666666666666 and F[0].val[2][0] == 1
+    assert F[0].val[0][0] == 0.33333333333333333 and F[0].val[1][0] == 0.6666666666666666 and F[0].val[2][0] == 1
     assert F[1].val[0][0] == 0.5 and F[1].val[1][0] == 0.25 and F[1].val[2][0] == 0.16666666666666
     assert F[2].val[0][0] == 2 and F[2].val[1][0] == 10 and F[2].val[2][0] == 30
+    assert F[3].val[0][0] == 3.33333333333333333 and F[3].val[1][0] == 4.1666666666666666 and F[3].val[2][0] == 5.555555555555555
 
     # der: len_val x num_var
-    assert F[0].der[0][0] == 0.3333333333333 and F[0].der[0][1] == 0
-    assert F[0].der[1][0] == 0.3333333333333 and F[0].der[1][1] == 0
-    assert F[0].der[2][0] == 0.3333333333333 and F[0].der[2][1] == 0
+    assert F[0].der[0][0] == 0.33333333333333333 and F[0].der[0][1] == 0 and F[0].der[0][2] == 0 and F[0].der[0][3] == 0
+    assert F[0].der[1][0] == 0.33333333333333333 and F[0].der[1][1] == 0 and F[0].der[1][2] == 0 and F[0].der[1][3] == 0
+    assert F[0].der[2][0] == 0.33333333333333333 and F[0].der[2][1] == 0 and F[0].der[2][2] == 0 and F[0].der[2][3] == 0
 
-    assert F[1].der[0][0] == -0.5 and F[1].der[0][1] == 0
-    assert F[1].der[1][0] == -0.125 and F[1].der[1][1] == 0
-    assert F[1].der[2][0] == -0.05555555555555 and F[1].der[2][1] == 0
+    assert F[1].der[0][0] == -0.5 and F[1].der[0][1] == 0 and F[1].der[0][2] == 0 and F[1].der[0][3] == 0
+    assert F[1].der[1][0] == -0.125 and F[1].der[1][1] == 0 and F[1].der[1][2] == 0 and F[1].der[1][3] == 0
+    assert F[1].der[2][0] == -0.0555555555555555 and F[1].der[2][1] == 0 and F[1].der[2][2] == 0 and F[1].der[2][3] == 0
 
-    assert F[2].der[0][0] == 2 and F[2].der[0][1] == -4
-    assert F[2].der[1][0] == 5 and F[2].der[1][1] == -50
-    assert F[2].der[2][0] == 10 and F[2].der[2][1] == -300
+    assert F[2].der[0][0] == 2 and F[2].der[0][1] == -4 and F[2].der[0][2] == 0 and F[2].der[0][3] == 0
+    assert F[2].der[1][0] == 5 and F[2].der[1][1] == -50 and F[2].der[1][2] == 0 and F[2].der[1][3] == 0
+    assert F[2].der[2][0] == 10 and F[2].der[2][1] == -300 and F[2].der[2][2] == 0 and F[2].der[2][3] == 0
+
+    assert F[3].der[0][0] == 3.33333333333333333 and F[3].der[0][1] == -6.6666666666666666 and F[3].der[0][2] == -1.66666666666666666 and F[3].der[0][3] == -11.11111111111111
+    assert F[3].der[1][0] == 2.08333333333333333 and F[3].der[1][1] == -20.833333333333333 and F[3].der[1][2] == -1.04166666666666666 and F[3].der[1][3] == -6.9444444444444444
+    assert F[3].der[2][0] == 1.8518518518518519 and F[3].der[2][1] == -55.555555555555555 and F[3].der[2][2] == -0.925925925925926 and F[3].der[2][3] == -6.172839506172839
 
 def test_pow_vector():
     a = [1, 2, 3]
     b = [0.5, 0.2, 0.1]
+    c = [2, 4, 6]
+    d = [0.3, 0.6, 0.9]
 
-    x0 = AutoDiff(a, 1, 2, 0)
-    x1 = AutoDiff(b, 1, 2, 1)
+    x0 = AutoDiff(a, 1, 4, 0)
+    x1 = AutoDiff(b, 1, 4, 1)
+    x2 = AutoDiff(c, 1, 4, 2)
+    x3 = AutoDiff(d, 1, 4, 3)
 
-    f0 = x0 ** 2  # testing mul int
-    f1 = 0.5 ** x0  # testing rmul frac
+    f0 = x0 ** 2  # testing pow int
+    f1 = 0.5 ** x0  # testing rpow frac
     f2 = x0 ** x1  # testing AutoDiff
-    F = [f0, f1, f2]
+    f3 = x0 ** x1 ** x2 ** x3  # testing 4 var
+    F = [f0, f1, f2, f3]
 
     assert F[0].val[0][0] == 1 and F[0].val[1][0] == 4 and F[0].val[2][0] == 9
     assert F[1].val[0][0] == 0.5 and F[1].val[1][0] == 0.25 and F[1].val[2][0] == 0.125
     assert F[2].val[0][0] == 1 and F[2].val[1][0] == 1.148698354997035 and F[2].val[2][0] == 1.1161231740339044
+    assert F[3].val[0][0] == 1 and F[3].val[1][0] == 1.0173280592778047 and F[3].val[2][0] == 1.0000105948287346
 
     # der: len_val x num_var
-    assert F[0].der[0][0] == 2 and F[0].der[0][1] == 0
-    assert F[0].der[1][0] == 4 and F[0].der[1][1] == 0
-    assert F[0].der[2][0] == 6 and F[0].der[2][1] == 0
+    assert F[0].der[0][0] == 2 and F[0].der[0][1] == 0 and F[0].der[0][2] == 0 and F[0].der[0][3] == 0
+    assert F[0].der[1][0] == 4 and F[0].der[1][1] == 0 and F[0].der[1][2] == 0 and F[0].der[1][3] == 0
+    assert F[0].der[2][0] == 6 and F[0].der[2][1] == 0 and F[0].der[2][2] == 0 and F[0].der[2][3] == 0
 
-    assert F[1].der[0][0] == -0.34657359027997264 and F[1].der[0][1] == 0
-    assert F[1].der[1][0] == -0.17328679513998632 and F[1].der[1][1] == 0
-    assert F[1].der[2][0] == -0.08664339756999316 and F[1].der[2][1] == 0
+    assert F[1].der[0][0] == -0.34657359027997264 and F[1].der[0][1] == 0 and F[1].der[0][2] == 0 and F[1].der[0][3] == 0
+    assert F[1].der[1][0] == -0.17328679513998632 and F[1].der[1][1] == 0 and F[1].der[1][2] == 0 and F[1].der[1][3] == 0
+    assert F[1].der[2][0] == -0.08664339756999316 and F[1].der[2][1] == 0 and F[1].der[2][2] == 0 and F[1].der[2][3] == 0
 
-    assert F[2].der[0][0] == 0.5 and F[2].der[0][1] == 0
-    assert F[2].der[1][0] == 0.11486983549970349 and F[2].der[1][1] == 0.796217026080042
-    assert F[2].der[2][0] == 0.03720410580113015 and F[2].der[2][1] == 1.2261866346609027
+    assert F[2].der[0][0] == 0.5 and F[2].der[0][1] == 0 and F[2].der[0][2] == 0 and F[2].der[0][3] == 0
+    assert F[2].der[1][0] == 0.11486983549970349 and F[2].der[1][1] == 0.796217026080042 and F[2].der[1][2] == 0 and F[2].der[1][3] == 0
+    assert F[2].der[2][0] == 0.03720410580113015 and F[2].der[2][1] == 1.2261866346609027 and F[2].der[2][2] == 0 and F[2].der[2][3] == 0
+
+    assert F[3].der[0][0] == 0.4259794049913497 and F[3].der[0][1] == 0 and F[3].der[0][2] == 0 and F[3].der[0][3] == 0
+    assert F[3].der[1][0] == 0.012607228929462063 and F[3].der[1][1] == 0.20076180650653108 and F[3].der[1][2] == -0.009693409882811104 and F[3].der[1][3] == -0.08958612973709902
+    assert F[3].der[2][0] == 3.214626600233811e-06 and F[3].der[2][1] == 0.0005314132353175134 and F[3].der[2][2] == -1.8354362907927648e-05 and F[3].der[2][3] == -0.00021924402361285026
 
 def test_arcsin_vector():
     a = [1, 2, 3]
