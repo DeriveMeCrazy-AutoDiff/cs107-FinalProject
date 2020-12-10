@@ -342,7 +342,42 @@ def test_tanh_ReverseADNode():
     curr_func = tanh(x0 ** 2)
     curr_func.grad_value = 1.0
     assert abs(curr_func.value - 0.5648995528462251) < epsilon and abs(x0.grad() - 1.089421592310616) < epsilon
- 
+
+def test_equality_values():
+    x0 = ReverseADNode(0.8)
+    x1 = ReverseADNode(0.8)
+    x0.grad_value = 1
+    x1.grad_value = 1
+    assert x0 == x1
+  
+def test_inequality_values():
+    x0 = ReverseADNode(0.8)
+    x1 = ReverseADNode(0.5)
+    curr_func = x0 ** 2 + x1 ** 3
+    curr_func.grad_value = 1
+    assert not x0 == x1
+    
+def test_inequality_None():
+    x0 = ReverseADNode(0.8)
+    x1 = ReverseADNode(0.8)
+    assert not x0 == x1
+
+def test_equality_gradient():
+    x0 = ReverseADNode(0.8)
+    x1 = ReverseADNode(0.8)
+    curr_func = x0 ** 2 + x1 ** 2
+    curr_func.grad_value = 1
+    x0.grad()
+    x1.grad()
+    assert x0 == x1
+
+def test_inequality_gradient():
+    x0 = ReverseADNode(0.8)
+    x1 = ReverseADNode(0.8)
+    curr_func = x0 ** 2 + x1 ** 3
+    curr_func.grad_value = 1
+    assert not x0 == x1
+  
 def test_jacobian_frac():
     values = [0.1, 0.2, 0.4]
     def f1(x0, x1, x2):
