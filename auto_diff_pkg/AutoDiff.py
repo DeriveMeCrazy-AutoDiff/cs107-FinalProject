@@ -1,19 +1,15 @@
 import numpy as np
-import time
 
 class AutoDiff():
 
     def __init__(self, value, deriv=1.0, variables = 1, position = 0):
-        if isinstance(value, (list, int, float)):
-            self.val = np.array([value]).T
-            self.der = np.ones((len(self.val),1))*deriv
-        #elif isinstance(value, (np.ndarray, np.generic)):
-        else:
+        if isinstance(value, (np.ndarray, np.generic)):
             self.val = value
             self.der = deriv
-        self.children = []
-        self.grad_value = None
-        
+        else:
+            self.val = np.array([value]).T
+            self.der = np.ones((len(self.val),1))*deriv
+
         if variables >1:
             self.der = np.zeros((len(self.val),variables))
             self.der[ : , position] = deriv
@@ -32,10 +28,7 @@ class AutoDiff():
           
     def __mul__(self, other):
         try:
-            z = AutoDiff(self.val*other.val, self.der*other.val + self.val*other.der)
-            self.children.append((other.val, z))
-            other.children.append((self.val, z))
-            return z
+            return AutoDiff(self.val*other.val, self.der*other.val + self.val*other.der)
         except AttributeError:
             return AutoDiff(self.val*other, self.der*other)
 
@@ -82,6 +75,18 @@ class AutoDiff():
     
     def __str__(self):
         return 'value: {}, derivative: {}'.format(self.val,self.der)
+    
+    def __eq__ (self, other):
+        try:
+            return ((self.val == other.val) and (self.der == other.der))
+        except AttributeError:
+            return False
+    
+    def __ne__(self, other):
+        try:
+            return ((self.val != other.val) or (self.der != other.der))
+        except AttributeError:
+            return True
     
     def reverse_mode(self):
         # recurse only if the value is not yet cached
@@ -167,90 +172,14 @@ def sqrt(x):
         return np.sqrt(x)
         
 def jacobian (variables, functions):
-    jacobian_array = np.empty((len(functions), len(variables)))  
-                                 
+    jacobian_array = np.empty((len(functions), len(variables)))                             
     autodiff_list = []
+    var_size = len(variables)
+    
     for idx_val, val in enumerate(variables):
-        autodiff_list.append(AutoDiff(val,0))
-    for idx_diff, val  in enumerate(variables):
-        autodiff_list[idx_diff] = AutoDiff(val,1)
-        for idx_f, function  in enumerate(functions):
-            jacobian_array[idx_f,idx_diff] = function(*autodiff_list).der
-        autodiff_list[idx_diff] = AutoDiff(val,0)
+        autodiff_list.append(AutoDiff(val,1,var_size,idx_val))
+        
+    for idx_f, function  in enumerate(functions):
+        jacobian_array[idx_f] = function(*autodiff_list).der[0]
+
     return jacobian_array
-
-
-
-## Demos
-#function takes multiple functions and assigns parameters from list. outputs jacobian
-values = [1,2,4] 
-def f1(x0, x1, x2):
-    return (x0 + x1 + x2)
-def f2(x0, x1, x2):
-    return (1*x0 + 2*x1 + 3*x2)
-def f3(x0, x1, x2):
-    return (1*x0*2*x1*3*x2)
-def f4(x0, x1, x2):
-    return (x0**2 + x1**3 + x2**4)
-functions = [f1, f2, f3,f4]
-print(jacobian(values, functions), "\n")
-
-#Equation takes multiple values from autodiff, f.der returns gradient
-x0=AutoDiff(1,1,3,0)
-x1=AutoDiff(2,1,3,1)
-x2=AutoDiff(4,1,3,2)
-
-f1 = x0 + x1 + x2
-f2 = 1*x0 + 2*x1 + 3*x2
-f3 = 1*x0*2*x1*3*x2
-f4 = x0**2 + x1**3 + x2**4
-print(f4.der, "\n")
-
-F=[f1, f2, f3, f4]
-print(F[0].der)
-print(F[1].der)
-print(F[2].der)
-print(F[3].der)
-
-#Comparing Reverse mode and forward mode
-tic = time.perf_counter()
-x = AutoDiff(4)
-y = AutoDiff(.5)
-
-a = x * y
-a.grad_value = 1
-print(x.reverse_mode(), y.reverse_mode())
-toc = time.perf_counter()
-print(f"Reverse Mode {toc - tic} seconds")
-
-
-tic = time.perf_counter()
-x = AutoDiff(4,1,2,0)
-y = AutoDiff(.5,1,2,1)
-
-a = x * y
-
-print(a.der)
-toc = time.perf_counter()
-print(f"Forward Mode {toc - tic} seconds")
-
-#autodiff takes vector inputs and f outputs matrix of gradients of each input.
-a = [2,4,6]
-b = [1,3,5]
-c = [3,6,9]
-x0=AutoDiff(a,1,3,0)
-x1=AutoDiff(b,1,3,1)
-x2=AutoDiff(c,1,3,2)
-
-f1 = x0 + x1 + x2
-f2 = 1*x0 + 2*x1 + 3*x2
-f3 = 1*x0*2*x1*3*x2
-f4 = x0**2 + x1**3 + x2**4
-f5 = x0/x1**x2
-
-F=[f1, f2, f3, f4, f5]
-print(F[0].der)
-print(F[1].der)
-print(F[2].der)
-print(F[3].der)
-print(F[4].der)
