@@ -9,22 +9,13 @@ Al-Muataz Khalil \
 Tianen Liu
 
 ## Installing the Dependencies
-If installing within a conda environment:
+The package can be installed by navigating to the top level of the repository and running a pip install:
 ```
-conda install --file requirements.txt
-```
-Otherwise:
-```
-pip install -r requirements.txt
+pip install .
 ```
 ## Usage
-First, add the package to your python path (will not be necessary in future project iterations)
-```
-import os
-os.path.insert(0,'/path/to/cs107-FinalProject/auto_diff_pkg/')
-```
 The package can then be imported and utilized.
 ```
-import AutoDiff as AD
+import auto_diff_pkg.AutoDiff as AD
 ```
 Please see `docs/demo.ipynb` for demonstrations of the AutoDiff class.
