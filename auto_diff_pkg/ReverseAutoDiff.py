@@ -15,6 +15,19 @@ class ReverseADNode:
             self.grad_value = sum(weight * var.grad() for weight, var in self.children)
         return self.grad_value
     
+    def __eq__(self, other):
+        if not isinstance(other, ReverseADNode):
+            return False
+        if self.value != other.value:
+            return False
+        if not self.grad_value or not other.grad_value:
+            return False
+        else:
+            return self.grad() == other.grad()
+        
+    def __ne__(self, other):
+        return not self.__eq__(other)
+    
     def __add__(self, other):
         if not isinstance(other, ReverseADNode):
             other = ReverseADNode(other)
