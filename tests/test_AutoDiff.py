@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 #import auto_diff_pkg.AutoDiff as AutoDiff
 from auto_diff_pkg.AutoDiff import AutoDiff, sqrt, sin, cos, exp, log, tan, arcsin, arccos, arctan, sinh, cosh, tanh, logistic, jacobian
 
+#final EPSILON = 10**(-12)
 epsilon = 10**(-12)
 
 def test_init_int_zero():    
@@ -143,11 +144,6 @@ def test_log():
     curr_func = log(2)
     assert curr_func == 0.6931471805599453
 
-# def test_log_neg():
-#     x0 = AutoDiff(-4)
-#     with pytest.raises(ValueError):
-#         curr_func = log(x0)
-
 def test_log_frac():    
     curr_func = log(0.5)
     assert curr_func == -0.6931471805599453
@@ -155,6 +151,7 @@ def test_log_frac():
 def test_log_AutoDiff():    
     x0 = AutoDiff(10)
     curr_func = log(x0 ** 2)
+    real_log_val = 4.605170185988092
     assert curr_func.val == 4.605170185988092 and curr_func.der == 0.2
 
 def test_exp_frac():    
@@ -213,10 +210,6 @@ def test_sqrt_frac():
     curr_func = sqrt(0.5)
     assert curr_func == 0.7071067811865476
 
-# def test_sqrt_neg():
-#     with pytest.raises(ValueError):
-#         curr_func = sqrt(-5)
-
 def test_sqrt_int():    
     curr_func = sqrt(5)
     assert curr_func == 2.23606797749979
@@ -226,8 +219,6 @@ def test_sqrt_AutoDiff():
     curr_func = sqrt(x0 + 6)
     assert curr_func.val == 2.8284271247461903 and curr_func.der == 0.17677669529663687
 
-# ---- updated: arcsin, arccos, arctan, sinh, cosh, tanh, logistic, jacobian
-
 def test_arcsin_frac():
     curr_func = arcsin(0.5)
     assert abs(curr_func - 0.5235987755982988) < epsilon
@@ -235,10 +226,6 @@ def test_arcsin_frac():
 def test_arcsin_int():
     curr_func = arcsin(1)
     assert abs(curr_func - 1.5707963267948966) < epsilon
-
-# def test_arcsin_outside_one():
-#     with pytest.raises(ValueError):
-#         curr_func = arcsin(2)
 
 def test_arcsin_AutoDiff():
     x0 = AutoDiff(0.8)
@@ -253,10 +240,6 @@ def test_arccos_int():
     curr_func = arccos(-1)
     assert abs(curr_func - 3.141592653589793) < epsilon
 
-# def test_arccos_outside_one():
-#     with pytest.raises(ValueError):
-#         curr_func = arccos(2)
-
 def test_arccos_AutoDiff():
     x0 = AutoDiff(0.8)
     curr_func = arccos(x0 ** 2)
@@ -269,10 +252,6 @@ def test_arctan_frac():
 def test_arctan_int():
     curr_func = arctan(1)
     assert abs(curr_func - 0.7853981633974483) < epsilon
-
-# def test_arctan_outside_half_pi():
-#     with pytest.raises(ValueError):
-#         curr_func = arctan(2)
 
 def test_arctan_AutoDiff():
     x0 = AutoDiff(0.8)
@@ -348,9 +327,7 @@ def test_jacobian_frac():
     assert list(jacobian(values, functions)[1]) == [1, 2, 3]
     assert abs(jacobian(values, functions)[2][0] - 0.48)<epsilon and abs(jacobian(values, functions)[2][1] - 0.24)<epsilon and abs(jacobian(values, functions)[2][2] - 0.12)<epsilon
     assert abs(jacobian(values, functions)[3][0] - 0.2) < epsilon and abs(jacobian(values, functions)[3][1] - 0.12) < epsilon and abs(jacobian(values, functions)[3][2] - 0.256) < epsilon
-    #assert list(jacobian(values, functions)[3]) == [0.2, 0.12, 0.256]
     assert abs(jacobian(values, functions)[4][0] - 0.9950041652780257) < epsilon and abs(jacobian(values, functions)[4][1] - -0.19866933079506122) < epsilon and abs(jacobian(values, functions)[4][2] - 1.178754105810975) < epsilon
-    #assert list(jacobian(values, functions)[4]) == [0.9950041652780257, -0.19866933079506122, 1.178754105810975]
 
 def test_jacobian_int():
     values = [1, 2, 4]
