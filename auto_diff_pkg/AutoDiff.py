@@ -61,8 +61,10 @@ class AutoDiff():
     
     def __pow__(self, other):
         try:
+            self.val = self.val.astype(float)
             return AutoDiff(self.val**other.val, other.val*(self.val**(other.val-1))*self.der+np.log(np.abs(self.val))*(self.val**other.val)*other.der)
         except AttributeError:
+            self.val = self.val.astype(float)
             return AutoDiff(self.val**other, other*(self.val**(other-1))*self.der)
         
     def __rpow__(self, other):
