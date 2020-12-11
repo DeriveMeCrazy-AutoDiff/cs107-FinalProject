@@ -8,8 +8,12 @@ Moriya Dechtiar \
 Al-Muataz Khalil \
 Tianen Liu
 
-## Installing the Dependencies
-The package can be installed by navigating to the top level of the repository and running a pip install:
+## Installing the Package
+The package can be installed by making a pip install from PyPI:
+```
+pip install auto_diff_pkg
+```
+Alternatively, the package can be installed by navigating to the top level of the repository and running a pip install:
 ```
 pip install .
 ```
