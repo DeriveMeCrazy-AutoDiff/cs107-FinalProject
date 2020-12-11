@@ -27,8 +27,6 @@ class AutoDiff():
     >>> f = x1**2 +2*x2
     [4. 2.]
     
-    
-    
     """
     def __init__(self, value, deriv=1.0, variables = 1, position = 0):         
         if isinstance(value, list):
