@@ -1,19 +1,48 @@
 import numpy as np
 
 class AutoDiff():
-
-    def __init__(self, value, deriv=1.0, variables = 1, position = 0):
-        if isinstance(value, (np.ndarray, np.generic)):
+    """Class which performs forward automatic differentiation
+    
+    ATTRIBUTES
+    ==========
+    val : the value of the object
+    der : the derivative of the object
+    Optional
+    variables: number of variables used in a multivariable function
+    position : position of this variable in the function
+    
+    EXAMPLES
+    ========
+    >>> x = AutoDiff(4)
+    >>>f = x**2 +2x
+    >>> f.der
+    10
+    
+    >>> x1 = AutoDiff(2,1,2,0)
+    >>> x2 = AutoDiff(4,1,2,1)
+    >>> f = x1**2 +2x2
+    [[4. 2.]]
+    
+    
+    
+    """
+    def __init__(self, value, deriv=1.0, variables = 1, position = 0):         
+        if isinstance(value, list):
+            self.val = np.array([value]).T
+            self.der = np.ones((len(self.val),1))*deriv
+            
+        else:
             self.val = value
             self.der = deriv
-        else:
-            self.val = np.array([value]).T
-            self.der = np.ones(len(self.val))*deriv
 
         if variables >1:
-            self.der = np.zeros((len(self.val),variables))
-            self.der[ : , position] = deriv
-
+            try:
+                self.der = np.zeros((len(self.val),variables))
+                self.der[ : , position] = deriv
+            except TypeError:
+                 self.der = np.zeros(variables)
+                 self.der[position] = deriv
+            
     def __neg__(self):
         return AutoDiff(-self.val, -self.der)
 
@@ -61,10 +90,12 @@ class AutoDiff():
     
     def __pow__(self, other):
         try:
-            self.val = self.val.astype(float)
+            if isinstance(self.val, (np.ndarray, np.generic)):
+                self.val = self.val.astype(float)
             return AutoDiff(self.val**other.val, other.val*(self.val**(other.val-1))*self.der+np.log(np.abs(self.val))*(self.val**other.val)*other.der)
         except AttributeError:
-            self.val = self.val.astype(float)
+            if isinstance(self.val, (np.ndarray, np.generic)):
+                self.val = self.val.astype(float)
             return AutoDiff(self.val**other, other*(self.val**(other-1))*self.der)
         
     def __rpow__(self, other):
@@ -180,6 +211,6 @@ def jacobian (variables, functions):
         autodiff_list.append(AutoDiff(val,1,var_size,idx_val))
         
     for idx_f, function  in enumerate(functions):
-        jacobian_array[idx_f] = function(*autodiff_list).der[0]
+        jacobian_array[idx_f] = function(*autodiff_list).der
 
     return jacobian_array
