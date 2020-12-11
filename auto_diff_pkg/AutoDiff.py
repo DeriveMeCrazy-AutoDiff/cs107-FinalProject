@@ -5,23 +5,27 @@ class AutoDiff():
     
     ATTRIBUTES
     ==========
-    val : the value of the object
-    der : the derivative of the object
+    val: the value of the object, can be scalar of vector
+    der: the derivative of the object
     Optional
     variables: number of variables used in a multivariable function
     position : position of this variable in the function
     
     EXAMPLES
     ========
-    >>> x = AutoDiff(4)
+    >>>x = AutoDiff(4)
+    >>>x.val
+    4
+    >>>x.der
+    1
     >>>f = x**2 +2x
-    >>> f.der
+    >>>f.der
     10
     
     >>> x1 = AutoDiff(2,1,2,0)
     >>> x2 = AutoDiff(4,1,2,1)
-    >>> f = x1**2 +2x2
-    [[4. 2.]]
+    >>> f = x1**2 +2*x2
+    [4. 2.]
     
     
     
@@ -214,3 +218,4 @@ def jacobian (variables, functions):
         jacobian_array[idx_f] = function(*autodiff_list).der
 
     return jacobian_array
+
