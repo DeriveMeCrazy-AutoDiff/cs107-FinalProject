@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="auto_diff_pkg",
-    version="0.1.0",
+    version="0.1.1",
     author="DeriveMeCrazy-AutoDiff Group 21",
     author_email="jalling@g.harvard.edu, mod821@g.harvard.edu, tliu@g.harvard.edu, alk264@g.harvard.edu",
     description="A package for performing automatic differentiation",
