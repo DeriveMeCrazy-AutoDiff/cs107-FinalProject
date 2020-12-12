@@ -38,12 +38,20 @@ class AutoDiff():
             self.der = deriv
         
         if isinstance(deriv, list):
-            self.der = np.array(deriv)
+            try:
+                self.der = np.zeros((len(self.val),len(deriv)))
+                self.der[ : ] = deriv
+            except TypeError:
+                 self.der = np.array(deriv)
         
 
         if variables >1:
-            self.der = np.zeros(variables)
-            self.der[position] = deriv
+            try:
+                self.der = np.zeros((len(self.val),variables))
+                self.der[ : , position] = deriv
+            except TypeError:
+                 self.der = np.zeros(variables)
+                 self.der[position] = deriv
             
     def __neg__(self):
         return AutoDiff(-self.val, -self.der)
