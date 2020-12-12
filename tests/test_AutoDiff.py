@@ -1215,7 +1215,7 @@ def test_log_vector_list():
 
 def test_exp_vector_list():
     a = [1]
-    b = [0.5]
+    b = [0.5, 0.2, 0.1]
 
     x0 = AutoDiff(a, [1,0])
     x1 = AutoDiff(b, [0,1])
@@ -1238,34 +1238,17 @@ def test_exp_vector_list():
 def test_mul_deriv_list():
 
     x0 = AutoDiff(1, [1,0,0,0])
-    x1 = AutoDiff(0, [0,1,0,0])
+    x1 = AutoDiff(-1, [0,1,0,0])
     x2 = AutoDiff(2, [0,0,1,0])
     x3 = AutoDiff(.3, [0,0,0,1])
+    
 
-    f0 = x0 * 3  # testing mul int
-    f1 = 0.5 * x0  # testing rmul frac
-    f2 = x0 * x1  # testing AutoDiff
     f3 = x0 * x1 * x2 * x3  # testing 4 var
-    F = [f0, f1, f2, f3]
 
-    assert F[0].val[0][0] == 3 and F[0].val[1][0] == 6 and F[0].val[2][0] == 9
-    assert F[1].val[0][0] == 0.5 and F[1].val[1][0] == 1 and F[1].val[2][0] == 1.5
-    assert F[2].val[0][0] == 0.5 and F[2].val[1][0] == 0.4 and abs(F[2].val[2][0] - 0.3) < epsilon
-    assert F[3].val[0][0] == 0.3 and F[3].val[1][0] == 0.96 and abs(F[3].val[2][0] - 1.62) < epsilon
 
-    # der: len_val x num_var
-    assert F[0].der[0][0] == 3 and F[0].der[0][1] == 0 and F[0].der[0][2] == 0 and F[0].der[0][3] == 0
-    assert F[0].der[1][0] == 3 and F[0].der[1][1] == 0 and F[0].der[1][2] == 0 and F[0].der[1][3] == 0
-    assert F[0].der[2][0] == 3 and F[0].der[2][1] == 0 and F[0].der[2][2] == 0 and F[0].der[2][3] == 0
-
-    assert F[1].der[0][0] == 0.5 and F[1].der[0][1] == 0 and F[1].der[0][2] == 0 and F[1].der[0][3] == 0
-    assert F[1].der[1][0] == 0.5 and F[1].der[1][1] == 0 and F[1].der[1][2] == 0 and F[1].der[1][3] == 0
-    assert F[1].der[2][0] == 0.5 and F[1].der[2][1] == 0 and F[1].der[2][2] == 0 and F[1].der[2][3] == 0
-
-    assert F[2].der[0][0] == 0.5 and F[2].der[0][1] == 1 and F[2].der[0][2] == 0 and F[2].der[0][3] == 0
-    assert F[2].der[1][0] == 0.2 and F[2].der[1][1] == 2 and F[2].der[1][2] == 0 and F[2].der[1][3] == 0
-    assert F[2].der[2][0] == 0.1 and F[2].der[2][1] == 3 and F[2].der[2][2] == 0 and F[2].der[2][3] == 0
-
-    assert F[3].der[0][0] == 0.3 and F[3].der[0][1] == 0.6 and F[3].der[0][2] == 0.15 and F[3].der[0][3] == 1
-    assert F[3].der[1][0] == 0.48 and F[3].der[1][1] == 4.8 and F[3].der[1][2] == 0.24 and F[3].der[1][3] == 1.6
-    assert abs(F[3].der[2][0] - 0.54)<epsilon and abs(F[3].der[2][1] - 16.2)<epsilon and abs(F[3].der[2][2] - 0.27)<epsilon and abs(F[3].der[2][3] - 1.8)<epsilon
+    assert f3.val == -0.6
+    
+    assert f3.der[0] == -0.6 
+    assert f3.der[1] == 0.6
+    assert f3.der[2] == -0.3
+    assert f3.der[3] == -2.
