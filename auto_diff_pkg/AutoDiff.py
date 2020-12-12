@@ -36,6 +36,10 @@ class AutoDiff():
         else:
             self.val = value
             self.der = deriv
+        
+        if isinstance(deriv, list):
+            self.der = np.array(deriv)
+        
 
         if variables >1:
             try:
@@ -216,4 +220,3 @@ def jacobian (variables, functions):
         jacobian_array[idx_f] = function(*autodiff_list).der
 
     return jacobian_array
-
