@@ -6,7 +6,7 @@ class AutoDiff():
     ATTRIBUTES
     ==========
     val: the value of the object, can be scalar of vector
-    der: the derivative of the object
+    der: the derivative of the object, can be a scalar, vector or array
     Optional
     variables: number of variables used in a multivariable function
     position : position of this variable in the function
@@ -27,6 +27,11 @@ class AutoDiff():
     >>> f = x1**2 +2*x2
     [4. 2.]
     
+    >>> x1 = AutoDiff(2,[1,0])
+    >>> x2 = AutoDiff(4,[0,1])
+    >>> f = x1**2 +2*x2
+    [4. 2.]
+    
     """
     def __init__(self, value, deriv=1.0, variables = 1, position = 0):         
         if isinstance(value, list):
@@ -36,6 +41,14 @@ class AutoDiff():
         else:
             self.val = value
             self.der = deriv
+        
+        if isinstance(deriv, list):
+            try:
+                self.der = np.zeros((len(self.val),len(deriv)))
+                self.der[ : ] = deriv
+            except TypeError:
+                 self.der = np.array(deriv)
+        
 
         if variables >1:
             try:
@@ -216,4 +229,3 @@ def jacobian (variables, functions):
         jacobian_array[idx_f] = function(*autodiff_list).der
 
     return jacobian_array
-
