@@ -6,7 +6,7 @@ class AutoDiff():
     ATTRIBUTES
     ==========
     val: the value of the object, can be scalar of vector
-    der: the derivative of the object
+    der: the derivative of the object, can be a scalar, vector or array
     Optional
     variables: number of variables used in a multivariable function
     position : position of this variable in the function
@@ -24,6 +24,11 @@ class AutoDiff():
     
     >>> x1 = AutoDiff(2,1,2,0)
     >>> x2 = AutoDiff(4,1,2,1)
+    >>> f = x1**2 +2*x2
+    [4. 2.]
+    
+    >>> x1 = AutoDiff(2,[1,0])
+    >>> x2 = AutoDiff(4,[0,1])
     >>> f = x1**2 +2*x2
     [4. 2.]
     
